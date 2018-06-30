@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import contract from 'truffle-contract'
 import MarketplaceContract from '../build/contracts/Marketplace.json'
 import getWeb3 from './utils/getWeb3'
 import getWeb3Accounts from './utils/getWeb3Accounts'
+import { Role } from './constants/role'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -33,13 +35,12 @@ class App extends Component {
   }
 
   async getCurrentUser() {
-    const contract = require('truffle-contract')
     const marketplace = contract(MarketplaceContract)
     marketplace.setProvider(this.state.web3.currentProvider)
 
     const marketplaceInstance = await marketplace.deployed()
     const ownerAccount = await marketplaceInstance.owner.call()
-    const role = this.state.currentUser.account === ownerAccount ? 'Admin' : 'Shopper'
+    const role = this.state.currentUser.account === ownerAccount ? Role.ADMIN : Role.SHOPPER
 
     const accounts = await getWeb3Accounts(this.state.web3)
     this.setState({ 
