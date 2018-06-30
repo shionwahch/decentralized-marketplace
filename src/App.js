@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import MarketplaceContract from '../build/contracts/Marketplace.json'
 import getWeb3 from './utils/getWeb3'
+import getWeb3Accounts from './utils/getWeb3Accounts'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -44,15 +45,14 @@ class App extends Component {
     const ownerAccount = await marketplaceInstance.owner.call()
     const role = this.state.currentUser.account === ownerAccount ? 'Admin' : 'Shopper'
 
-    this.state.web3.eth.getAccounts((error, accounts) => {
-      this.setState({ 
-        currentUser: {
-          ...this.state.currentUser,
-          account: accounts[0],
-          role: role
-        }
-      })      
-    });
+    const accounts = await getWeb3Accounts(this.state.web3)
+    this.setState({ 
+      currentUser: {
+        ...this.state.currentUser,
+        account: accounts[0],
+        role: role
+      }
+    })
   }
 
   render() {
