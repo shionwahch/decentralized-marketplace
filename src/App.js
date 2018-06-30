@@ -21,19 +21,15 @@ class App extends Component {
     }
   }
 
-  componentWillMount() {
-    // Get network provider, web3 instance and current active account
-    getWeb3.then(results => {
-      this.setState({
-        web3: results.web3,
-      })
+  async componentWillMount() {
+    // Get web3 instance
+    const web3 = await getWeb3
+    
+    this.setState({
+      web3: web3,
+    })
 
-      // Instantiate contract once web3 provided.
-      this.getCurrentUser()
-    })
-    .catch(() => {
-      console.log('Error finding web3.')
-    })
+    this.getCurrentUser()
   }
 
   async getCurrentUser() {
