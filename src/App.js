@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import contract from 'truffle-contract'
 import MarketplaceContract from '../build/contracts/Marketplace.json'
 import getWeb3 from './utils/getWeb3'
-import getCurrentUser from './utils/getCurrentUser'
+import getCurrentUser, { getShortAddress } from './utils/getCurrentUser'
 import NavigationBar from './components/NavigationBar'
 
 import './css/oswald.css'
@@ -17,8 +17,8 @@ class App extends Component {
     this.state = {
       web3: null,
       currentUser: {
-        account: null,
-        role: null
+        account: '',
+        role: ''
       }
     }
   }
@@ -50,12 +50,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <NavigationBar />
+        <NavigationBar user={this.state.currentUser} />
 
         <main className="container">
           <div className="pure-g">
             <div className="pure-u-1-1">
-              <h1>Hi {this.state.currentUser.account ? this.state.currentUser.account.substr(0,6) : 'User'} ({this.state.currentUser.role})</h1>
+              <h1>Hi {getShortAddress(this.state.currentUser.account)} ({this.state.currentUser.role})</h1>
               <p>Ready to shop!</p>
             </div>
           </div>

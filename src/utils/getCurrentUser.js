@@ -1,5 +1,5 @@
 import getWeb3Accounts from '../utils/getWeb3Accounts'
-import { Role } from '../constants/role'
+import Role from '../constants/role'
 
 const getCurrentUser = async (marketplaceInstance, web3) => {
   const ownerAccount = await marketplaceInstance.owner.call()
@@ -13,4 +13,7 @@ const getCurrentUser = async (marketplaceInstance, web3) => {
   }
 }
 
+const getShortAddress = (address) => address.substr(0,6)
+
+export { getShortAddress }
 export default getCurrentUser

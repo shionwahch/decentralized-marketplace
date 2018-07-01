@@ -5,4 +5,4 @@ const Role = Object.freeze({
     SHOPPER: 'SHOPPER'
 })
 
-export { Role }
+export default Role
