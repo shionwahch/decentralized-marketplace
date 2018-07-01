@@ -40,13 +40,15 @@ class App extends Component {
 
     const marketplaceInstance = await marketplace.deployed()
     const ownerAccount = await marketplaceInstance.owner.call()
-    const role = this.state.currentUser.account === ownerAccount ? Role.ADMIN : Role.SHOPPER
-
+    
     const accounts = await getWeb3Accounts(this.state.web3)
+    const currentAccount = accounts[0]
+    const role = currentAccount === ownerAccount ? Role.ADMIN : Role.SHOPPER
+
     this.setState({ 
       currentUser: {
         ...this.state.currentUser,
-        account: accounts[0],
+        account: currentAccount,
         role: role
       }
     })
