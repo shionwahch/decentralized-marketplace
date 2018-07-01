@@ -4,6 +4,7 @@ import MarketplaceContract from '../build/contracts/Marketplace.json'
 import getWeb3 from './utils/getWeb3'
 import getWeb3Accounts from './utils/getWeb3Accounts'
 import { Role } from './constants/role'
+import NavigationBar from './components/NavigationBar'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -57,9 +58,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Decentralized Marketplace</a>
-        </nav>
+        <NavigationBar />
 
         <main className="container">
           <div className="pure-g">
