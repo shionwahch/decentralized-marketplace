@@ -24,9 +24,16 @@ contract('Marketplace', (accounts) => {
     assert.equal(storeOwnerCount.toNumber(), 2, `The store owner count should be 2`);
   });
 
-  it("should return error adding store owner with non-admin account.", async () => {
-    // const addStoreOwner = marketplace.addStoreOwner(storeOwner1, {from: shopper})
-    // await assertRevert(addStoreOwner);
+  // Unable to import and use open-zeppelin packages
+  it.skip("should not allow adding of same store owner.", async () => {
+    await marketplace.addStoreOwner(storeOwner1, { from: owner })
+    await assertRevert(await marketplace.addStoreOwner(storeOwner1, { from: owner }))
+  });
+  
+  // Unable to import and use open-zeppelin packages
+  it.skip("should return error adding store owner with non-admin account.", async () => {
+    const addStoreOwner = marketplace.addStoreOwner(storeOwner1, {from: shopper})
+    await assertRevert(addStoreOwner);
   });
 
 });

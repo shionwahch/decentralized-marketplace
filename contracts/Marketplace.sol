@@ -11,11 +11,18 @@ contract Marketplace is Ownable {
     
     address[] public storeOwners;
     uint public storeOwnerCount;
+    mapping(address => bool) isStoreOwner;
 
-    function addStoreOwner(address _storeOwner) public onlyOwner returns (uint) {
+    modifier uniqueStoreOwner(address _storeOwner) {
+        require(isStoreOwner[_storeOwner] == false);
+        _;
+    }
+
+    function addStoreOwner(address _storeOwner) public onlyOwner uniqueStoreOwner(_storeOwner) returns (uint) {
         require(_storeOwner != address(0));
         storeOwners.push(_storeOwner);
         storeOwnerCount += 1;
+        isStoreOwner[_storeOwner] = true;
         return storeOwnerCount - 1;
     }
 }
