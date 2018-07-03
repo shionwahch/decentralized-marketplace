@@ -18,6 +18,11 @@ contract Marketplace is Ownable {
         _;
     }
 
+    function getStoreOwner(uint _index) public view returns (address) {
+        require(_index >= 0 && _index < storeOwnerCount);
+        return storeOwners[_index];
+    }
+
     function addStoreOwner(address _storeOwner) public onlyOwner uniqueStoreOwner(_storeOwner) returns (uint) {
         require(_storeOwner != address(0));
         storeOwners.push(_storeOwner);
