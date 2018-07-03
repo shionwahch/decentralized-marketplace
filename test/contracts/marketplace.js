@@ -1,3 +1,4 @@
+import listStoreOwners from '../../src/utils/listStoreOwners'
 const Marketplace = artifacts.require("../../contracts/Marketplace.sol")
 
 contract('Marketplace', (accounts) => {
@@ -43,13 +44,13 @@ contract('Marketplace', (accounts) => {
   });
 
   // TODO Unable to import and use open-zeppelin packages
-  it.skip("should return error when retreiving store owner with index -1.", async () => {
+  it.skip("should return error when retrieving a store owner with index -1.", async () => {
     const storeOwner = marketplace.getStoreOwner.call(-1)
     await assertRevert(await storeOwner);
   });
 
   // TODO Unable to import and use open-zeppelin packages
-  it.skip("should return error when retreiving store owner with index out of bounds.", async () => {
+  it.skip("should return error when retrieving a store owner with index out of bounds.", async () => {
     const storeOwnerCount = await marketplace.storeOwnerCount.call()
     const storeOwner = await marketplace.getStoreOwner.call(storeOwnerCount)
     await assertRevert(await storeOwner);
