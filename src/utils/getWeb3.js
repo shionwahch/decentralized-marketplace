@@ -2,7 +2,7 @@ import Web3 from 'web3'
 
 const localProvider = {
   url: 'http://127.0.0.1',
-  port: 8545
+  port: 9545
 }
 
 const getWeb3 = new Promise((resolve, reject) => {

@@ -9,7 +9,7 @@ import "node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
  */
 contract Marketplace is Ownable {
     
-    address[] public storeOwners;
+    address[] storeOwners;
     uint public storeOwnerCount;
     mapping(address => bool) isStoreOwner;
 

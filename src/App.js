@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
 import contract from 'truffle-contract'
 import MarketplaceContract from '../build/contracts/Marketplace.json'
 import getWeb3 from './utils/getWeb3'
 import getCurrentUser, { getShortAddress } from './utils/getCurrentUser'
 import NavigationBar from './components/NavigationBar'
+import listStoreOwners from './utils/listStoreOwners'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -19,7 +21,8 @@ class App extends Component {
       currentUser: {
         account: '',
         role: ''
-      }
+      },
+      storeOwners: []
     }
   }
 
@@ -40,10 +43,12 @@ class App extends Component {
     const marketplaceInstance = await marketplace.deployed()
 
     const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
+    const storeOwners = await listStoreOwners(marketplaceInstance)
     this.setState({ 
       currentUser: {
         ...currentUser,
-      }
+      },
+      storeOwners: storeOwners
     })
   }
 
@@ -57,6 +62,7 @@ class App extends Component {
             <div className="pure-u-1-1">
               <h1>Hi {getShortAddress(this.state.currentUser.account)} ({this.state.currentUser.role})</h1>
               <p>Ready to shop!</p>
+              {this.state.storeOwners.map(storeOwner => <div key={`so-${storeOwner}`} className="pure-u-1-1">{storeOwner}</div>)}
             </div>
           </div>
         </main>
