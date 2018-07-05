@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import _ from 'lodash'
+import { Route } from 'react-router-dom'
 import contract from 'truffle-contract'
 import MarketplaceContract from '../build/contracts/Marketplace.json'
 import getWeb3 from './utils/getWeb3'
-import getCurrentUser, { getShortAddress } from './utils/getCurrentUser'
+import getCurrentUser from './utils/getCurrentUser'
 import NavigationBar from './components/NavigationBar'
+import Home from './components/Home'
+import StoreOwners from './components/StoreOwners'
 import listStoreOwners from './utils/listStoreOwners'
 
 import './css/oswald.css'
@@ -59,11 +61,9 @@ class App extends Component {
 
         <main className="container">
           <div className="pure-g">
-            <div className="pure-u-1-1">
-              <h1>Hi {getShortAddress(this.state.currentUser.account)} ({this.state.currentUser.role})</h1>
-              <p>Ready to shop!</p>
-              {this.state.storeOwners.map(storeOwner => <div key={`so-${storeOwner}`} className="pure-u-1-1">{storeOwner}</div>)}
-            </div>
+            <Route path="/" exact render={() => <Home user={this.state.currentUser}/>} />
+            <Route path="/store-owners" render={() => <StoreOwners storeOwners={this.state.storeOwners}/>} />
+            <Route path="/profile" render={() => <div className="pure-u-1-1"><h1>My Profile</h1></div>} />
           </div>
         </main>
       </div>

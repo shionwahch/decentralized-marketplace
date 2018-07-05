@@ -43,13 +43,13 @@ code {
   font-family: 'Oswald', 'Arial Narrow', sans-serif;
 }
 
-.navbar a {
+.navbar .pure-menu-link {
   color: #fff;
 }
 
-.navbar a:active,
-.navbar a:focus,
-.navbar a:hover {
+.navbar .pure-menu-link:active,
+.navbar .pure-menu-link:focus,
+.navbar .pure-menu-link:hover {
   background: #233e5e;
 }
 

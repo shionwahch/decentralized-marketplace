@@ -1,15 +1,16 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import Role from '../constants/role'
 import { getShortAddress } from '../utils/getCurrentUser'
 
 const NavigationBar = ({ user }) => {
   return (
     <nav className="navbar pure-menu pure-menu-horizontal">
-      <a href="#" className="pure-menu-heading pure-menu-link">Decentralized Marketplace</a>
+      <Link to="/"><div href="#" className="pure-menu-heading pure-menu-link">Decentralized Marketplace</div></Link>
       <ul className="pure-menu-list">
-        {user.role === Role.ADMIN ? (<li className="pure-menu-item"><a href="#" className="pure-menu-link">Admin Functions</a></li>) : null}
-        {user.role === Role.STORE_OWNER ? (<li className="pure-menu-item"><a href="#" className="pure-menu-link">Store Owner Functions</a></li>) : null}
-        <li className="pure-menu-item"><a href="#" className="pure-menu-link">{getShortAddress(user.account)} ({user.role})</a></li>
+        {user.role === Role.ADMIN ? (<Link to="/store-owners"><li className="pure-menu-item pure-menu-link">Manage Store Owners</li></Link>) : null}
+        {user.role === Role.STORE_OWNER ? (<Link to="/storefronts"><li className="pure-menu-item pure-menu-link">Manage Storefronts</li></Link>) : null}
+        <Link to="/profile"><li className="pure-menu-item pure-menu-link">{getShortAddress(user.account)} ({user.role})</li></Link>
       </ul>
     </nav>
   )
