@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import addStoreOwner from '../utils/addStoreOwner'
 
 class AddStoreOwner extends Component {
   constructor(props) {
@@ -14,14 +15,22 @@ class AddStoreOwner extends Component {
     this.setState({ address: event.target.value })
   }
   
-  handleSubmit = (event) => {
+  handleSubmit = async (event, marketplace) => {
     event.preventDefault();
-    alert(this.state.address)
+    try {
+      await addStoreOwner(marketplace, this.state.address)
+      this.props.handleUpdate(this.state.address)
+    } catch (e) {
+      // console.log(e)
+      alert('Error: Duplicated or invalid store owner address')
+    }
   }
 
   render() {
+    const { marketplace } = this.props
+
     return (
-      <form className="pure-form" onSubmit={this.handleSubmit}>
+      <form className="pure-form" onSubmit={(event) => this.handleSubmit(event, marketplace)}>
         <input type="text" placeholder="Store Owner address" value={this.state.address} onChange={this.handleChange}/>
         <button type="submit" className="pure-button pure-button-primary">+ Store Owner</button>
       </form>

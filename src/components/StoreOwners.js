@@ -11,9 +11,12 @@ class StoreOwners extends Component {
   constructor(props) {
     super(props)
 
+    this.handleUpdate = this.handleUpdate.bind(this)
+
     this.state = {
       web3: null,
-      storeOwners: []
+      storeOwners: [],
+      marketplace: null
     }
   }
 
@@ -28,9 +31,17 @@ class StoreOwners extends Component {
     const marketplace = contract(MarketplaceContract)
     marketplace.setProvider(this.state.web3.currentProvider)
     const marketplaceInstance = await marketplace.deployed()
+    marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
 
     const storeOwners = await listStoreOwners(marketplaceInstance)
-    this.setState({ storeOwners: storeOwners })
+    this.setState({ 
+      storeOwners: storeOwners,
+      marketplace: marketplaceInstance
+    })
+  }
+
+  handleUpdate(newAddress) {
+    this.setState({ storeOwners: this.state.storeOwners.concat([newAddress]) })
   }
 
   render() {
@@ -38,7 +49,7 @@ class StoreOwners extends Component {
       <div className="pure-u-1-1">
         <h1>Store Owner List</h1>
   
-        <AddStoreOwner />
+        <AddStoreOwner marketplace={this.state.marketplace} handleUpdate={this.handleUpdate}/>
   
         <table className="pure-table pure-table-horizontal no-border store-owner-list">
           <thead className="no-background-color">
