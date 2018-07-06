@@ -1,2 +1,0 @@
-
-export const ADD_STORE_OWNER = 'ADD_STORE_OWNER'
