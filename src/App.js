@@ -7,7 +7,6 @@ import getCurrentUser from './utils/getCurrentUser'
 import NavigationBar from './components/NavigationBar'
 import Home from './components/Home'
 import StoreOwners from './components/StoreOwners'
-import listStoreOwners from './utils/listStoreOwners'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -24,7 +23,6 @@ class App extends Component {
         account: '',
         role: ''
       },
-      storeOwners: []
     }
   }
 
@@ -32,10 +30,7 @@ class App extends Component {
     // Get web3 instance
     const web3 = await getWeb3
     
-    this.setState({
-      web3: web3,
-    })
-
+    this.setState({ web3: web3 })
     this.initializeData()
   }
 
@@ -45,13 +40,7 @@ class App extends Component {
     const marketplaceInstance = await marketplace.deployed()
 
     const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
-    const storeOwners = await listStoreOwners(marketplaceInstance)
-    this.setState({ 
-      currentUser: {
-        ...currentUser,
-      },
-      storeOwners: storeOwners
-    })
+    this.setState({ currentUser: currentUser })
   }
 
   render() {
@@ -62,7 +51,7 @@ class App extends Component {
         <main className="container">
           <div className="pure-g">
             <Route path="/" exact render={() => <Home user={this.state.currentUser}/>} />
-            <Route path="/store-owners" render={() => <StoreOwners storeOwners={this.state.storeOwners}/>} />
+            <Route path="/store-owners" render={() => <StoreOwners />} />
             <Route path="/profile" render={() => <div className="pure-u-1-1"><h1>My Profile</h1></div>} />
           </div>
         </main>
