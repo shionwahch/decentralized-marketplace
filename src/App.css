@@ -66,3 +66,17 @@ code {
   height: 16px;
   margin-right: 10px;
 }
+
+/* Table */
+
+.no-border {
+  border: 0px;
+}
+
+thead.no-background-color {
+  background-color: transparent;
+}
+
+tbody tr:hover {
+  background-color: #f2f2f2;
+}
