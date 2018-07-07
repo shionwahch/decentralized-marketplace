@@ -9,12 +9,12 @@ import "node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
  */
 contract Marketplace is Ownable {
     
-    address[] storeOwners;
+    address[] private storeOwners;
     uint public storeOwnerCount;
-    mapping(address => bool) isStoreOwner;
+    mapping(address => bool) private isStoreOwnerList;
 
     modifier uniqueStoreOwner(address _storeOwner) {
-        require(isStoreOwner[_storeOwner] == false);
+        require(isStoreOwnerList[_storeOwner] == false);
         _;
     }
 
@@ -27,7 +27,12 @@ contract Marketplace is Ownable {
         require(_storeOwner != address(0));
         storeOwners.push(_storeOwner);
         storeOwnerCount += 1;
-        isStoreOwner[_storeOwner] = true;
+        isStoreOwnerList[_storeOwner] = true;
         return storeOwnerCount - 1;
     }
+
+    function isStoreOwner(address _storeOwner) public view returns (bool) {
+        return isStoreOwnerList[_storeOwner];
+    }
+
 }
