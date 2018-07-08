@@ -1,4 +1,3 @@
-import listStoreOwners from '../../src/utils/listStoreOwners'
 const Marketplace = artifacts.require("../../contracts/Marketplace.sol")
 
 contract('Marketplace', (accounts) => {
@@ -10,10 +9,12 @@ contract('Marketplace', (accounts) => {
   const shopper1 = accounts[3]
   const shopper2 = accounts[4]
 
-  beforeEach(async () => {
+  before(async () => {
     marketplace = await Marketplace.new({from: owner})
     await marketplace.addStoreOwner(storeOwner1, { from: owner })
     await marketplace.addStoreOwner(storeOwner2, { from: owner })
+    await marketplace.addStorefront('Store 1', { from: storeOwner1 })
+    await marketplace.addStorefront('Store 2', { from: storeOwner1 })
   });
 
   it("should return owner as the owner of the contract.", async () => {
@@ -40,7 +41,8 @@ contract('Marketplace', (accounts) => {
 
   it("should return storeOwner1.", async () => {
     const storeOwner = await marketplace.getStoreOwner.call(0)
-    assert.equal(storeOwner, storeOwner1, `The store owner should be ${storeOwner1}`);
+    const owner = storeOwner[0]
+    assert.equal(owner, storeOwner1, `The store owner should be ${storeOwner1}`);
   });
 
   // TODO Unable to import and use open-zeppelin packages
@@ -54,6 +56,19 @@ contract('Marketplace', (accounts) => {
     const storeOwnerCount = await marketplace.storeOwnerCount.call()
     const storeOwner = await marketplace.getStoreOwner.call(storeOwnerCount)
     await assertRevert(await storeOwner);
+  });
+
+  it("should return Store 1 details.", async () => {
+    const storefront = await marketplace.getStorefront.call(0)
+    const name = storefront
+    assert.equal(name, 'Store 1', `The store owner count should be Store 1`);
+  });
+
+  it("should return [0, 1] (index of storefront).", async () => {
+    const storeOwner = await marketplace.getStoreOwner.call(0)
+    const storefronts = storeOwner[1].map(s => s.toNumber())
+    assert.equal(storefronts[0], 0, `The storefront index should be 0`);
+    assert.equal(storefronts[1], 1, `The storefront index should be 1`);
   });
 
 });
