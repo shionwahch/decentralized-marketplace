@@ -19,9 +19,8 @@ class AddStoreOwner extends Component {
     event.preventDefault();
     try {
       await StoreOwner.addStoreOwner(marketplace, this.state.address)
-      this.props.handleUpdate(this.state.address)
+      this.props.handleUpdate(new StoreOwner(this.state.address))
     } catch (e) {
-      // console.log(e)
       alert('Error: Duplicated or invalid store owner address')
     }
   }

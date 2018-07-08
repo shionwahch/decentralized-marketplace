@@ -34,9 +34,8 @@ class StoreOwners extends Component {
     marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
 
     const storeOwners = await StoreOwner.listStoreOwners(marketplaceInstance)
-    const storeOwnersAddress = _.map(storeOwners, storeOwner => storeOwner[0])
     this.setState({ 
-      storeOwners: storeOwnersAddress,
+      storeOwners: storeOwners,
       marketplace: marketplaceInstance
     })
   }
@@ -66,7 +65,7 @@ class StoreOwners extends Component {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{storeOwner}</td>
+                  <td>{storeOwner.owner}</td>
                 </tr>
               )
             })
