@@ -4,7 +4,7 @@ import _ from 'lodash'
 import contract from 'truffle-contract'
 import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
-import listStoreOwners from '../utils/listStoreOwners'
+import StoreOwner from '../models/StoreOwner'
 import AddStoreOwner from './AddStoreOwner'
 
 class StoreOwners extends Component {
@@ -33,9 +33,10 @@ class StoreOwners extends Component {
     const marketplaceInstance = await marketplace.deployed()
     marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
 
-    const storeOwners = await listStoreOwners(marketplaceInstance)
+    const storeOwners = await StoreOwner.listStoreOwners(marketplaceInstance)
+    const storeOwnersAddress = _.map(storeOwners, storeOwner => storeOwner[0])
     this.setState({ 
-      storeOwners: storeOwners,
+      storeOwners: storeOwnersAddress,
       marketplace: marketplaceInstance
     })
   }
@@ -65,7 +66,7 @@ class StoreOwners extends Component {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{storeOwner[0]}</td>
+                  <td>{storeOwner}</td>
                 </tr>
               )
             })

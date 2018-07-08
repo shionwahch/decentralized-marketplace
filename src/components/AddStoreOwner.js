@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import addStoreOwner from '../utils/addStoreOwner'
+import StoreOwner from '../models/StoreOwner'
 
 class AddStoreOwner extends Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class AddStoreOwner extends Component {
   handleSubmit = async (event, marketplace) => {
     event.preventDefault();
     try {
-      await addStoreOwner(marketplace, this.state.address)
+      await StoreOwner.addStoreOwner(marketplace, this.state.address)
       this.props.handleUpdate(this.state.address)
     } catch (e) {
       // console.log(e)
