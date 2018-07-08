@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import StoreOwner from '../models/StoreOwner'
+import Storefront from '../models/Storefront'
 
 class AddStorefront extends Component {
   constructor(props) {
@@ -18,8 +18,8 @@ class AddStorefront extends Component {
   handleSubmit = async (event, marketplace) => {
     event.preventDefault();
     try {
-      await StoreOwner.addStorefront(marketplace, this.state.name)
-      this.props.handleUpdate(this.state.name)
+      await Storefront.addStorefront(marketplace, this.state.name)
+      this.props.handleUpdate(new Storefront(this.state.name))
     } catch (e) {
       alert('Error: Only Store Owner is able to add a Storefront')
     }
@@ -35,7 +35,6 @@ class AddStorefront extends Component {
       </form>
     )
   }
-
 
 }
 

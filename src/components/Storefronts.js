@@ -6,7 +6,7 @@ import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
 import getCurrentUser from '../utils/getCurrentUser'
 import AddStorefront from './AddStorefront'
-import StoreOwner from '../models/StoreOwner'
+import Storefront from '../models/Storefront'
 
 class Storefronts extends Component {
   constructor(props) {
@@ -35,7 +35,7 @@ class Storefronts extends Component {
     marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
 
     const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
-    const storefronts = await StoreOwner.listStorefronts(marketplaceInstance, currentUser.account)
+    const storefronts = await Storefront.listStorefronts(marketplaceInstance, currentUser.account)
     this.setState({ 
       storefronts: storefronts,
       marketplace: marketplaceInstance
@@ -67,7 +67,7 @@ class Storefronts extends Component {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{storefront}</td>
+                  <td>{storefront.name}</td>
                 </tr>
               )
             })
