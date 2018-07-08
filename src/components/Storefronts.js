@@ -4,10 +4,11 @@ import _ from 'lodash'
 import contract from 'truffle-contract'
 import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
-import listStoreOwners from '../utils/listStoreOwners'
-import AddStoreOwner from './AddStoreOwner'
+import getCurrentUser from '../utils/getCurrentUser'
+import AddStorefront from './AddStorefront'
+import StoreOwner from '../models/StoreOwner'
 
-class StoreOwners extends Component {
+class Storefronts extends Component {
   constructor(props) {
     super(props)
 
@@ -15,7 +16,7 @@ class StoreOwners extends Component {
 
     this.state = {
       web3: null,
-      storeOwners: [],
+      storefronts: [],
       marketplace: null
     }
   }
@@ -33,39 +34,40 @@ class StoreOwners extends Component {
     const marketplaceInstance = await marketplace.deployed()
     marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
 
-    const storeOwners = await listStoreOwners(marketplaceInstance)
+    const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
+    const storefronts = await StoreOwner.listStorefronts(marketplaceInstance, currentUser.account)
     this.setState({ 
-      storeOwners: storeOwners,
+      storefronts: storefronts,
       marketplace: marketplaceInstance
     })
   }
 
-  handleUpdate(newAddress) {
-    this.setState({ storeOwners: this.state.storeOwners.concat([newAddress]) })
+  handleUpdate(newStorefront) {
+    this.setState({ storefronts: this.state.storefronts.concat([newStorefront]) })
   }
 
   render() {
     return (
       <div className="pure-u-1-1">
-        <h1>Store Owner List</h1>
+        <h1>Storefront List</h1>
   
-        <AddStoreOwner marketplace={this.state.marketplace} handleUpdate={this.handleUpdate}/>
+        <AddStorefront marketplace={this.state.marketplace} handleUpdate={this.handleUpdate}/>
   
         <table className="pure-table pure-table-horizontal no-border store-owner-list">
           <thead className="no-background-color">
               <tr>
                 <th>#</th>
-                <th>Address</th>
+                <th>Storefronts</th>
               </tr>
           </thead>
   
           <tbody>
           { 
-            _.map(this.state.storeOwners, (storeOwner, index) => {
+            _.map(this.state.storefronts, (storefront, index) => {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{storeOwner[0]}</td>
+                  <td>{storefront}</td>
                 </tr>
               )
             })
@@ -79,8 +81,8 @@ class StoreOwners extends Component {
 }
 
 
-StoreOwners.propTypes = {
-  storeOwners: PropTypes.arrayOf(PropTypes.string)
+Storefronts.propTypes = {
+  storefronts: PropTypes.arrayOf(PropTypes.string)
 }
 
-export default StoreOwners
+export default Storefronts

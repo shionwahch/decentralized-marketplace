@@ -7,6 +7,7 @@ import getCurrentUser from './utils/getCurrentUser'
 import NavigationBar from './components/NavigationBar'
 import Home from './components/Home'
 import StoreOwners from './components/StoreOwners'
+import Storefronts from './components/Storefronts'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -52,6 +53,7 @@ class App extends Component {
           <div className="pure-g">
             <Route path="/" exact render={() => <Home user={this.state.currentUser}/>} />
             <Route path="/store-owners" render={() => <StoreOwners />} />
+            <Route path="/storefronts" render={() => <Storefronts user={this.state.currentUser}/>} />
             <Route path="/profile" render={() => <div className="pure-u-1-1"><h1>My Profile</h1></div>} />
           </div>
         </main>

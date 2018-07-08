@@ -22,7 +22,7 @@ contract Marketplace is Ownable {
     Storefront[] private storefronts;
     uint public storeOwnerCount;
     mapping(address => bool) private isStoreOwnerList;
-    mapping(address => uint) private storeOwnerToIndex;
+    mapping(address => uint) storeOwnerToIndex;
     
     modifier uniqueStoreOwner(address _storeOwner) {
         require(isStoreOwnerList[_storeOwner] == false);
@@ -30,7 +30,15 @@ contract Marketplace is Ownable {
     }
 
     function getStoreOwner(uint _index) public view returns (address, uint[]) {
+        require(_index >= 0 && _index < storeOwnerCount);
         return (storeOwners[_index].owner, storeOwners[_index].storefronts);
+    }
+
+    function getStoreOwnerByAddress(address _storeOwner) public view returns (address, uint[]) {
+        require(_storeOwner != address(0));
+
+        uint storeOwnerIndex = storeOwnerToIndex[_storeOwner];
+        return getStoreOwner(storeOwnerIndex);
     }
 
     function addStoreOwner(address _storeOwner) public onlyOwner uniqueStoreOwner(_storeOwner) returns (uint) {
