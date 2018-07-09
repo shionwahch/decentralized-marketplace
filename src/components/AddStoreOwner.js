@@ -29,9 +29,9 @@ class AddStoreOwner extends Component {
     const { marketplace } = this.props
 
     return (
-      <form className="pure-form" onSubmit={(event) => this.handleSubmit(event, marketplace)}>
-        <input type="text" placeholder="Store Owner address" value={this.state.address} onChange={this.handleChange}/>
-        <button type="submit" className="pure-button pure-button-primary">+ Store Owner</button>
+      <form className="pure-form add-form" onSubmit={(event) => this.handleSubmit(event, marketplace)}>
+        <input className="pure-u-3-4" type="text" placeholder="Store Owner address" value={this.state.address} onChange={this.handleChange}/>
+        <div className="pure-u-1-4"><button className="pure-button pure-button-primary" type="submit">+ Store Owner</button></div>
       </form>
     )
   }

@@ -29,9 +29,9 @@ class AddStorefront extends Component {
     const { marketplace } = this.props
 
     return (
-      <form className="pure-form" onSubmit={(event) => this.handleSubmit(event, marketplace)}>
-        <input type="text" placeholder="Storefront name" value={this.state.name} onChange={this.handleChange}/>
-        <button type="submit" className="pure-button pure-button-primary">+ Storefont</button>
+      <form className="pure-form add-form" onSubmit={(event) => this.handleSubmit(event, marketplace)}>
+        <input className="pure-u-3-4" type="text" placeholder="Storefront name" value={this.state.name} onChange={this.handleChange}/>
+        <div className="pure-u-1-4"><button type="submit" className="pure-button pure-button-primary">+ Storefont</button></div>
       </form>
     )
   }

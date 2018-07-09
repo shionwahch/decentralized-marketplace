@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import { NavLink } from 'react-router-dom';
 import contract from 'truffle-contract'
 import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
-import getCurrentUser from '../utils/getCurrentUser'
-import AddStorefront from './AddStorefront'
-import Storefront from '../models/Storefront'
+// import getCurrentUser from '../utils/getCurrentUser'
+import AddProduct from './AddProduct';
 
 class Storefronts extends Component {
   constructor(props) {
@@ -17,7 +15,7 @@ class Storefronts extends Component {
 
     this.state = {
       web3: null,
-      storefronts: [],
+      products: [],
       marketplace: null
     }
   }
@@ -35,40 +33,42 @@ class Storefronts extends Component {
     const marketplaceInstance = await marketplace.deployed()
     marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
 
-    const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
-    const storefronts = await Storefront.listStorefronts(marketplaceInstance, currentUser.account)
+    // const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
+    // const storefronts = await Storefront.listStorefronts(marketplaceInstance, currentUser.account)
     this.setState({ 
-      storefronts: storefronts,
+      // products: products,
       marketplace: marketplaceInstance
     })
   }
 
-  handleUpdate(newStorefront) {
-    this.setState({ storefronts: this.state.storefronts.concat([newStorefront]) })
+  handleUpdate(newProduct) {
+    this.setState({ storefronts: this.state.products.concat([newProduct]) })
   }
 
   render() {
     return (
       <div className="pure-u-1-1">
-        <h1>Storefront List</h1>
+        <h1>Product List</h1>
   
-        <AddStorefront marketplace={this.state.marketplace} handleUpdate={this.handleUpdate}/>
+        <AddProduct marketplace={this.state.marketplace} handleUpdate={this.handleUpdate}/>
   
         <table className="pure-table pure-table-horizontal no-border store-owner-list">
           <thead className="no-background-color">
               <tr>
                 <th>#</th>
-                <th>Storefronts</th>
+                <th>Product</th>
+                <th>Price</th>
               </tr>
           </thead>
   
           <tbody>
           { 
-            _.map(this.state.storefronts, (storefront, index) => {
+            _.map(this.state.products, (product, index) => {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td><NavLink to={`/storefronts/${index}`}>{storefront.name}</NavLink></td>
+                  <td>{product.name}</td>
+                  <td>{product.price}</td>
                 </tr>
               )
             })
