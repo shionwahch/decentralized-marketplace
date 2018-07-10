@@ -16,13 +16,21 @@ contract Marketplace is Ownable {
 
     struct Storefront {
         string name;
+        uint[] products;
+    }
+
+    struct Product {
+        string name;
+        uint price;
+        uint quantity;
     }
 
     StoreOwner[] private storeOwners;
     Storefront[] private storefronts;
+    Product[] private products;
     uint public storeOwnerCount;
     mapping(address => bool) private isStoreOwnerList;
-    mapping(address => uint) storeOwnerToIndex;
+    mapping(address => uint) private storeOwnerToIndex;
     
     modifier uniqueStoreOwner(address _storeOwner) {
         require(isStoreOwnerList[_storeOwner] == false);
@@ -61,10 +69,11 @@ contract Marketplace is Ownable {
     function addStorefront(string _name) public returns (uint) {
         require(isStoreOwnerList[msg.sender]);
         
-        Storefront memory storefront = Storefront(_name);
+        uint storefrontIndex = storefronts.length;
+        Storefront memory storefront;
+        storefront.name = _name;
         storefronts.push(storefront);
 
-        uint storefrontIndex = storefronts.length - 1;
         uint storeOwnerIndex = storeOwnerToIndex[msg.sender];
         storeOwners[storeOwnerIndex].storefronts.push(storefrontIndex);
         return storefrontIndex;
@@ -72,6 +81,22 @@ contract Marketplace is Ownable {
 
     function getStorefront(uint _index) public view returns (string) {
         return (storefronts[_index].name);
+    }
+
+    function addProduct(uint _storefrontIndex, string _name, uint _price, uint _quantity) public returns (uint) {
+        require(_price >= 0);
+        require(_quantity >= 0);
+
+        uint productIndex = products.length;
+        Product memory product = Product(_name, _price, _quantity);
+        products.push(product);
+
+        storefronts[_storefrontIndex].products.push(productIndex);
+        return productIndex;
+    }
+
+    function getProduct(uint _index) public view returns (string, uint, uint) {
+        return (products[_index].name, products[_index].price, products[_index].quantity);
     }
 
 }

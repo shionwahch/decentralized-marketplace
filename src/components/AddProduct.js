@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
+import Product from '../models/Product'
 
 class AddProduct extends Component {
   constructor(props) {
     super(props)
-
     this.state = { 
+      storefrontId: this.props.storefrontId,
       name: '',
-      price: 0,
+      price: '',
+      quantity: ''
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -20,9 +22,10 @@ class AddProduct extends Component {
   handleSubmit = async (event, marketplace) => {
     event.preventDefault();
     try {
-      // await Storefront.addStorefront(marketplace, this.state.name)
-      // this.props.handleUpdate(new Storefront(this.state.name))
+      await Product.addProduct(marketplace, this.state.storefrontId, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
+      this.props.handleUpdate(new Product(this.state.name, this.state.price, this.state.quantity))
     } catch (e) {
+      console.log(e)
       alert('Error: Only Store Owner is able to add a Product')
     }
   }
@@ -33,7 +36,8 @@ class AddProduct extends Component {
     return (
       <form className="pure-form pure-g add-form" onSubmit={(event) => this.handleSubmit(event, marketplace)}>
         <input className="pure-u-1-2" type="text" name="name" placeholder="Product name" value={this.state.name} onChange={this.handleChange}/>
-        <input className="pure-u-1-4" type="text" name="price" placeholder="Product price (ETH)" value={this.state.price} onChange={this.handleChange}/>
+        <input className="pure-u-1-8" type="text" name="price" placeholder="Price (ETH)" value={this.state.price} onChange={this.handleChange}/>
+        <input className="pure-u-1-8" type="text" name="quantity" placeholder="Quantity" value={this.state.quantity} onChange={this.handleChange}/>
         <div className="pure-u-1-4"><button type="submit" className="pure-button pure-button-primary">+ Product</button></div>
       </form>
     )

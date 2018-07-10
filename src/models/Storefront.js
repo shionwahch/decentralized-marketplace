@@ -2,8 +2,9 @@ import _ from 'lodash'
 
 class Storefront {
 
-  constructor(name) {
+  constructor(name, products = []) {
     this.name = name
+    this.products = products
   }
 
   static listStorefronts = async (marketplace, owner) => {

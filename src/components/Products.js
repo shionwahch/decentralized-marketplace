@@ -1,21 +1,21 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import contract from 'truffle-contract'
 import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
-// import getCurrentUser from '../utils/getCurrentUser'
 import AddProduct from './AddProduct';
 
-class Storefronts extends Component {
+class Products extends Component {
   constructor(props) {
     super(props)
 
     this.handleUpdate = this.handleUpdate.bind(this)
-
     this.state = {
       web3: null,
       products: [],
+      storefrontId: this.props.match.params.id,
       marketplace: null
     }
   }
@@ -35,8 +35,9 @@ class Storefronts extends Component {
 
     // const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
     // const storefronts = await Storefront.listStorefronts(marketplaceInstance, currentUser.account)
+    const products = this.state.products
     this.setState({ 
-      // products: products,
+      products: products,
       marketplace: marketplaceInstance
     })
   }
@@ -50,7 +51,7 @@ class Storefronts extends Component {
       <div className="pure-u-1-1">
         <h1>Product List</h1>
   
-        <AddProduct marketplace={this.state.marketplace} handleUpdate={this.handleUpdate}/>
+        <AddProduct marketplace={this.state.marketplace} storefrontId={this.state.storefrontId} handleUpdate={this.handleUpdate}/>
   
         <table className="pure-table pure-table-horizontal no-border store-owner-list">
           <thead className="no-background-color">
@@ -58,6 +59,7 @@ class Storefronts extends Component {
                 <th>#</th>
                 <th>Product</th>
                 <th>Price</th>
+                <th>quantity</th>
               </tr>
           </thead>
   
@@ -69,6 +71,7 @@ class Storefronts extends Component {
                   <td>{index + 1}</td>
                   <td>{product.name}</td>
                   <td>{product.price}</td>
+                  <td>{product.quantity}</td>
                 </tr>
               )
             })
@@ -81,9 +84,8 @@ class Storefronts extends Component {
 
 }
 
-
-Storefronts.propTypes = {
-  storefronts: PropTypes.arrayOf(PropTypes.string)
+Products.propTypes = {
+  products: PropTypes.arrayOf(PropTypes.string)
 }
 
-export default Storefronts
+export default withRouter(Products)
