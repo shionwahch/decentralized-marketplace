@@ -9,7 +9,8 @@ class Storefront {
 
   static listStorefronts = async (marketplace, owner) => {
     const storeOwner = await marketplace.getStoreOwnerByAddress(owner)
-    const storefrontList = _.map(storeOwner[1], async index => await marketplace.getStorefront.call(index))
+    const storefrontIds = storeOwner[1];
+    const storefrontList = _.map(storefrontIds, async index => await marketplace.getStorefront.call(index))
     const storefronts = _.map(await Promise.all(storefrontList), results => new Storefront(results))
     return storefronts;
   }
