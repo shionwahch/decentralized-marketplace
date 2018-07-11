@@ -6,6 +6,7 @@ import contract from 'truffle-contract'
 import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
 import AddProduct from './AddProduct';
+import Product from '../models/Product';
 
 class Products extends Component {
   constructor(props) {
@@ -33,9 +34,7 @@ class Products extends Component {
     const marketplaceInstance = await marketplace.deployed()
     marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
 
-    // const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
-    // const storefronts = await Storefront.listStorefronts(marketplaceInstance, currentUser.account)
-    const products = this.state.products
+    const products = await Product.listProducts(marketplaceInstance, this.state.storefrontId)
     this.setState({ 
       products: products,
       marketplace: marketplaceInstance
@@ -43,7 +42,7 @@ class Products extends Component {
   }
 
   handleUpdate(newProduct) {
-    this.setState({ storefronts: this.state.products.concat([newProduct]) })
+    this.setState({ products: this.state.products.concat([newProduct]) })
   }
 
   render() {
@@ -57,9 +56,9 @@ class Products extends Component {
           <thead className="no-background-color">
               <tr>
                 <th>#</th>
-                <th>Product</th>
-                <th>Price</th>
-                <th>quantity</th>
+                <th>Product Name</th>
+                <th>Price (ETH)</th>
+                <th>Quantity</th>
               </tr>
           </thead>
   

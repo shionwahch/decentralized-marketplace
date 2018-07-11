@@ -37,6 +37,20 @@ contract Marketplace is Ownable {
         _;
     }
 
+    modifier isStoreOwnerOfStorefront(address _storeOwner, uint _storefrontId) {
+        bool storefrontExist = false;
+        uint storeOwnerIndex = storeOwnerToIndex[_storeOwner];
+        uint[] storefrontIds = storeOwners[storeOwnerIndex].storefronts;
+        for (uint i = 0 ; i < storefrontIds.length ; i++) {
+            if (storefrontIds[i] == _storefrontId) {
+                storefrontExist = true;
+                break;
+            }
+        }
+        require(storefrontExist == true);
+        _;
+    }
+
     function getStoreOwner(uint _index) public view returns (address, uint[]) {
         require(_index >= 0 && _index < storeOwnerCount);
         return (storeOwners[_index].owner, storeOwners[_index].storefronts);
@@ -79,11 +93,12 @@ contract Marketplace is Ownable {
         return storefrontIndex;
     }
 
-    function getStorefront(uint _index) public view returns (string) {
-        return (storefronts[_index].name);
+    function getStorefront(uint _index) public view returns (string, uint[]) {
+        return (storefronts[_index].name, storefronts[_index].products);
     }
 
-    function addProduct(uint _storefrontIndex, string _name, uint _price, uint _quantity) public returns (uint) {
+    function addProduct(uint _storefrontId, string _name, uint _price, uint _quantity) 
+        isStoreOwnerOfStorefront(msg.sender, _storefrontId) public returns (uint) {
         require(_price >= 0);
         require(_quantity >= 0);
 
@@ -91,7 +106,7 @@ contract Marketplace is Ownable {
         Product memory product = Product(_name, _price, _quantity);
         products.push(product);
 
-        storefronts[_storefrontIndex].products.push(productIndex);
+        storefronts[_storefrontId].products.push(productIndex);
         return productIndex;
     }
 
