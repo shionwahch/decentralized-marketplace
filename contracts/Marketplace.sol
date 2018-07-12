@@ -32,15 +32,24 @@ contract Marketplace is Ownable {
     mapping(address => bool) private isStoreOwnerList;
     mapping(address => uint) private storeOwnerToIndex;
     
+    /**
+    * @dev Throws exception if store owner exists
+    * @param _storeOwner Address of the store owner
+    */
     modifier uniqueStoreOwner(address _storeOwner) {
         require(isStoreOwnerList[_storeOwner] == false);
         _;
     }
 
+    /**
+    * @dev Check if a store owner owns a particular storefront
+    * @param _storeOwner Address of the store owner
+    * @param _storefrontId Index of the storefront
+    */
     modifier isStoreOwnerOfStorefront(address _storeOwner, uint _storefrontId) {
         bool storefrontExist = false;
         uint storeOwnerIndex = storeOwnerToIndex[_storeOwner];
-        uint[] storefrontIds = storeOwners[storeOwnerIndex].storefronts;
+        uint[] memory storefrontIds = storeOwners[storeOwnerIndex].storefronts;
         for (uint i = 0 ; i < storefrontIds.length ; i++) {
             if (storefrontIds[i] == _storefrontId) {
                 storefrontExist = true;
@@ -51,11 +60,19 @@ contract Marketplace is Ownable {
         _;
     }
 
+    /**
+    * @dev Retrieves store owner
+    * @param _index Index of the store owner
+    */
     function getStoreOwner(uint _index) public view returns (address, uint[]) {
         require(_index >= 0 && _index < storeOwnerCount);
         return (storeOwners[_index].owner, storeOwners[_index].storefronts);
     }
-
+    
+    /**
+    * @dev Retrieves store owner
+    * @param _storeOwner Address of the store owner
+    */
     function getStoreOwnerByAddress(address _storeOwner) public view returns (address, uint[]) {
         require(_storeOwner != address(0));
 
@@ -63,6 +80,10 @@ contract Marketplace is Ownable {
         return getStoreOwner(storeOwnerIndex);
     }
 
+    /**
+    * @dev Add a new store owner
+    * @param _storeOwner Address of the new store owner
+    */   
     function addStoreOwner(address _storeOwner) public onlyOwner uniqueStoreOwner(_storeOwner) returns (uint) {
         require(_storeOwner != address(0));
         
@@ -76,10 +97,18 @@ contract Marketplace is Ownable {
         return storeOwnerCount - 1;
     }
 
+    /**
+    * @dev Check if an address is a store owner
+    * @param _storeOwner Address of the store owner
+    */
     function isStoreOwner(address _storeOwner) public view returns (bool) {
         return isStoreOwnerList[_storeOwner];
     }
 
+    /**
+    * @dev Add a storefront
+    * @param _name Name of the storefront
+    */
     function addStorefront(string _name) public returns (uint) {
         require(isStoreOwnerList[msg.sender]);
         
@@ -92,11 +121,22 @@ contract Marketplace is Ownable {
         storeOwners[storeOwnerIndex].storefronts.push(storefrontIndex);
         return storefrontIndex;
     }
-
+    
+    /**
+    * @dev Retrieves storefront
+    * @param _index Index of the storefront
+    */
     function getStorefront(uint _index) public view returns (string, uint[]) {
         return (storefronts[_index].name, storefronts[_index].products);
     }
 
+    /**
+    * @dev Add a product
+    * @param _storefrontId The index of the storefront to own the product
+    * @param _name Name of the product
+    * @param _price Price of the product in ETH
+    * @param _quantity Quantity of the product
+    */
     function addProduct(uint _storefrontId, string _name, uint _price, uint _quantity) 
         isStoreOwnerOfStorefront(msg.sender, _storefrontId) public returns (uint) {
         require(_price >= 0);
@@ -110,6 +150,10 @@ contract Marketplace is Ownable {
         return productIndex;
     }
 
+    /**
+    * @dev Retrieves product
+    * @param _index Index of the product
+    */
     function getProduct(uint _index) public view returns (string, uint, uint) {
         return (products[_index].name, products[_index].price, products[_index].quantity);
     }
