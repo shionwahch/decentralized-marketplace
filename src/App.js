@@ -14,6 +14,9 @@ import './css/oswald.css'
 import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
+import './css/modal.css'
+import 'jquery/dist/jquery.min'
+import 'bootstrap/dist/js/bootstrap.min';
 
 class App extends Component {
   constructor(props) {

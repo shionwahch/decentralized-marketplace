@@ -5,8 +5,9 @@ import _ from 'lodash'
 import contract from 'truffle-contract'
 import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
-import AddProduct from './AddProduct';
-import Product from '../models/Product';
+import AddProduct from './AddProduct'
+import Product from '../models/Product'
+import EditProduct from './EditProduct'
 
 class Products extends Component {
   constructor(props) {
@@ -59,6 +60,7 @@ class Products extends Component {
                 <th>Product Name</th>
                 <th>Price (ETH)</th>
                 <th>Quantity</th>
+                <th></th>
               </tr>
           </thead>
   
@@ -71,6 +73,8 @@ class Products extends Component {
                   <td>{product.name}</td>
                   <td>{product.price}</td>
                   <td>{product.quantity}</td>
+                  <td><a className="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</a></td>
+                  <EditProduct product={product}/>
                 </tr>
               )
             })
