@@ -35,6 +35,7 @@ contract Marketplace is Ownable {
     mapping(address => uint) private storeOwnerToIndex;
 
     event ProductAdded(uint id, string name, uint price, uint quantity);
+    event StorefrontAdded(uint id, string name, uint[] products);
     
     /**
     * @dev Throws exception if store owner exists
@@ -124,6 +125,9 @@ contract Marketplace is Ownable {
 
         uint storeOwnerIndex = storeOwnerToIndex[msg.sender];
         storeOwners[storeOwnerIndex].storefronts.push(storefrontIndex);
+
+        emit StorefrontAdded(storefrontIndex, _name, new uint[](0));
+
         return storefrontIndex;
     }
     

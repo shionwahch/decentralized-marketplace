@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import Event from '../constants/event'
 
 class Storefront {
 
@@ -17,8 +18,13 @@ class Storefront {
   }
 
   static addStorefront = async (marketplace, name) => {
-    await marketplace.addStorefront(name)
-    return new Storefront(name)
+    const results = await marketplace.addStorefront(name)
+    const newStorefront = results.logs[0].event === Event.StorefrontAdded ? Storefront.mapStorefrontAddedEventToStorefront(results.logs[0].args) : null
+    return newStorefront
+  }
+
+  static mapStorefrontAddedEventToStorefront = (event) => {
+    return new Storefront(event.id.toNumber(), event.name, event.products)
   }
 
 }

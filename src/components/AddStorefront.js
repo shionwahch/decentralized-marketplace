@@ -18,8 +18,8 @@ class AddStorefront extends Component {
   handleSubmit = async (event, marketplace) => {
     event.preventDefault();
     try {
-      await Storefront.addStorefront(marketplace, this.state.name)
-      this.props.handleUpdate(new Storefront(this.state.name))
+      const newStorefront = await Storefront.addStorefront(marketplace, this.state.name)
+      this.props.handleUpdate(newStorefront)
     } catch (e) {
       alert('Error: Only Store Owner is able to add a Storefront')
     }
