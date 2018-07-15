@@ -20,6 +20,7 @@ contract Marketplace is Ownable {
     }
 
     struct Product {
+        uint id;
         string name;
         uint price;
         uint quantity;
@@ -143,7 +144,7 @@ contract Marketplace is Ownable {
         require(_quantity >= 0);
 
         uint productIndex = products.length;
-        Product memory product = Product(_name, _price, _quantity);
+        Product memory product = Product(productIndex, _name, _price, _quantity);
         products.push(product);
 
         storefronts[_storefrontId].products.push(productIndex);
@@ -154,8 +155,9 @@ contract Marketplace is Ownable {
     * @dev Retrieves product
     * @param _index Index of the product
     */
-    function getProduct(uint _index) public view returns (string, uint, uint) {
-        return (products[_index].name, products[_index].price, products[_index].quantity);
+    function getProduct(uint _index) public view returns (uint, string, uint, uint) {
+        Product memory product = products[_index];
+        return (product.id, product.name, product.price, product.quantity);
     }
 
 }

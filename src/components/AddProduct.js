@@ -5,10 +5,11 @@ class AddProduct extends Component {
   constructor(props) {
     super(props)
     this.state = { 
-      storefrontId: this.props.storefrontId,
+      id: '',
       name: '',
       price: '',
-      quantity: ''
+      quantity: '',
+      storefrontId: this.props.storefrontId,
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -23,7 +24,7 @@ class AddProduct extends Component {
     event.preventDefault();
     try {
       await Product.addProduct(marketplace, this.state.storefrontId, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
-      this.props.handleUpdate(new Product(this.state.name, this.state.price, this.state.quantity))
+      this.props.handleUpdate(new Product(this.state.id, this.state.name, this.state.price, this.state.quantity))
     } catch (e) {
       console.log(e)
       alert('Error: Only Store Owner is able to add a Product')

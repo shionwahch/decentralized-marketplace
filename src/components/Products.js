@@ -68,19 +68,21 @@ class Products extends Component {
           { 
             _.map(this.state.products, (product, index) => {
               return (
-                <tr key={index}>
+                <tr key={`product-${product.id}`}>
                   <td>{index + 1}</td>
                   <td>{product.name}</td>
                   <td>{product.price}</td>
                   <td>{product.quantity}</td>
-                  <td><a className="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</a></td>
-                  <EditProduct product={product}/>
+                  <td><a className="btn btn-primary" data-toggle="modal" data-target={`#edit-product-${product.id}`}>Edit</a></td>
                 </tr>
               )
             })
           }
           </tbody>
         </table>
+        {
+          _.map(this.state.products, product => <EditProduct key={"edit-product-"+product.id} product={product}/>)
+        }
       </div>
     )
   }

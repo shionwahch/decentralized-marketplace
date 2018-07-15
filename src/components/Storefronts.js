@@ -83,7 +83,15 @@ class Storefronts extends Component {
 
 
 Storefronts.propTypes = {
-  storefronts: PropTypes.arrayOf(PropTypes.string)
+  storefronts: PropTypes.shape({
+    name: PropTypes.string,
+    products: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      price: PropTypes.number,
+      quantity: PropTypes.number,
+    })
+  })
 }
 
 export default Storefronts
