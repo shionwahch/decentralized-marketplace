@@ -22,7 +22,7 @@ class Product {
 
   static listProducts = async (marketplace, storefrontId) => {
     const storefront = await marketplace.getStorefront(storefrontId)
-    const productIds = storefront[1]
+    const productIds = storefront[2]
     const productList = _.map(productIds, async index => await marketplace.getProduct.call(index))
     const products = _.map(await Promise.all(productList), results => new Product(results[0].toNumber(), results[1], results[2].toNumber(), results[3].toNumber()))
     return products;
