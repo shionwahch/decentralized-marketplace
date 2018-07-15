@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import contract from 'truffle-contract'
@@ -73,7 +73,7 @@ class Products extends Component {
                   <td>{product.name}</td>
                   <td>{product.price}</td>
                   <td>{product.quantity}</td>
-                  <td><a className="btn btn-primary" data-toggle="modal" data-target={`#edit-product-${product.id}`}>Edit</a></td>
+                  <td><NavLink to={`#edit-product-${product.id}`} data-toggle="modal" data-target={`#edit-product-${product.id}`}>Edit</NavLink></td>
                 </tr>
               )
             })
