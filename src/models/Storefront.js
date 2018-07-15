@@ -2,7 +2,8 @@ import _ from 'lodash'
 
 class Storefront {
 
-  constructor(name, products = []) {
+  constructor(id, name, products = []) {
+    this.id = id
     this.name = name
     this.products = products
   }
@@ -11,7 +12,7 @@ class Storefront {
     const storeOwner = await marketplace.getStoreOwnerByAddress(owner)
     const storefrontIds = storeOwner[1];
     const storefrontList = _.map(storefrontIds, async index => await marketplace.getStorefront.call(index))
-    const storefronts = _.map(await Promise.all(storefrontList), results => new Storefront(results[0], results[1]))
+    const storefronts = _.map(await Promise.all(storefrontList), results => new Storefront(results[0].toNumber(), results[1], results[2]))
     return storefronts;
   }
 

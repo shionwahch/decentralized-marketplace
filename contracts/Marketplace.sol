@@ -15,6 +15,7 @@ contract Marketplace is Ownable {
     }
 
     struct Storefront {
+        uint id;
         string name;
         uint[] products;
     }
@@ -117,6 +118,7 @@ contract Marketplace is Ownable {
         
         uint storefrontIndex = storefronts.length;
         Storefront memory storefront;
+        storefront.id = storefrontIndex;
         storefront.name = _name;
         storefronts.push(storefront);
 
@@ -129,8 +131,8 @@ contract Marketplace is Ownable {
     * @dev Retrieves storefront
     * @param _index Index of the storefront
     */
-    function getStorefront(uint _index) public view returns (string, uint[]) {
-        return (storefronts[_index].name, storefronts[_index].products);
+    function getStorefront(uint _index) public view returns (uint, string, uint[]) {
+        return (storefronts[_index].id, storefronts[_index].name, storefronts[_index].products);
     }
 
     /**
