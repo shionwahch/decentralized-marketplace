@@ -1,7 +1,8 @@
 import _ from 'lodash'
+import Event from '../constants/event'
 
 class Product {
-
+  
   constructor(id, name, price, quantity) {
     this.id = id
     this.name = name
@@ -10,8 +11,13 @@ class Product {
   }
 
   static addProduct = async (marketplace, storefrontId, name, price, quantity) => {
-    await marketplace.addProduct(storefrontId, name, price, quantity)
-    return new Product(name, price, quantity)
+    const results = await marketplace.addProduct(storefrontId, name, price, quantity)
+    const newProduct = results.logs[0].event === Event.ProductAdded ? Product.mapProductAddedEventToProduct(results.logs[0].args) : null
+    return newProduct
+  }
+
+  static mapProductAddedEventToProduct = (event) => {
+    return new Product(event.id.toNumber(), event.name, event.price.toNumber(), event.quantity.toNumber())
   }
 
   static listProducts = async (marketplace, storefrontId) => {

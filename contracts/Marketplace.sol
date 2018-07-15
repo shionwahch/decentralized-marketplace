@@ -32,6 +32,8 @@ contract Marketplace is Ownable {
     uint public storeOwnerCount;
     mapping(address => bool) private isStoreOwnerList;
     mapping(address => uint) private storeOwnerToIndex;
+
+    event ProductAdded(uint id, string name, uint price, uint quantity);
     
     /**
     * @dev Throws exception if store owner exists
@@ -148,6 +150,9 @@ contract Marketplace is Ownable {
         products.push(product);
 
         storefronts[_storefrontId].products.push(productIndex);
+
+        emit ProductAdded(productIndex, _name, _price, _quantity);
+
         return productIndex;
     }
 
