@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import $ from 'jquery'
+import Product from '../models/Product'
 
 class EditProduct extends Component {
   constructor(props) {
@@ -25,10 +26,8 @@ class EditProduct extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      console.log("submitting")
-      console.log(this.state)
-      // const newProduct = await Product.addProduct(marketplace, this.state.storefrontId, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
-      // this.props.handleUpdate(newProduct)
+      const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
+      this.props.handleUpdate(updatedProduct)
     } catch (e) {
       alert('Error: Only Store Owner is able to edit a Product')
     }
@@ -73,7 +72,7 @@ class EditProduct extends Component {
             </div>
 
             <div className="modal-footer">
-              <button type="button" className="pure-button pure-button-primary" onClick={() => $(`#${productKey}-submit`).click()}>Save</button>
+              <button type="button" className="pure-button pure-button-primary" data-dismiss="modal" onClick={() => $(`#${productKey}-submit`).click()}>Save</button>
               <button type="button" className="pure-button pure-button-secondary" data-dismiss="modal">Close</button>
             </div>
 

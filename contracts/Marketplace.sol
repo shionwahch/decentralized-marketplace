@@ -35,6 +35,7 @@ contract Marketplace is Ownable {
     mapping(address => uint) private storeOwnerToIndex;
 
     event ProductAdded(uint id, string name, uint price, uint quantity);
+    event ProductUpdated(uint id, string name, uint price, uint quantity);
     event StorefrontAdded(uint id, string name, uint[] products);
     
     /**
@@ -169,6 +170,24 @@ contract Marketplace is Ownable {
     function getProduct(uint _index) public view returns (uint, string, uint, uint) {
         Product memory product = products[_index];
         return (product.id, product.name, product.price, product.quantity);
+    }
+
+    /**
+    * @dev Updates product
+    * @param _index Index of the product
+    * @param _name Name of the product
+    * @param _price Price of the product in ETH
+    * @param _quantity Quantity of the product
+    */
+    function updateProduct(uint _index, string _name, uint _price, uint _quantity) public payable returns (uint) {
+        Product storage product = products[_index];
+        product.name = _name;
+        product.price = _price;
+        product.quantity = _quantity;
+
+        emit ProductUpdated(_index, _name, _price, _quantity);
+
+        return _index;
     }
 
 }

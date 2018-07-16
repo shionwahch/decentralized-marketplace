@@ -43,7 +43,17 @@ class Products extends Component {
   }
 
   handleUpdate(newProduct) {
-    this.setState({ products: this.state.products.concat([newProduct]) })
+    const productIndex = _.findIndex(this.state.products, product => product.id === newProduct.id)
+    
+    if (productIndex === -1) {
+      this.setState({ products: this.state.products.concat([newProduct]) })
+    } else {
+      const currentProducts = this.state.products
+      currentProducts[productIndex] = newProduct
+      this.setState({
+        products: currentProducts
+      })
+    }
   }
 
   render() {
@@ -81,7 +91,7 @@ class Products extends Component {
           </tbody>
         </table>
         {
-          _.map(this.state.products, product => <EditProduct key={"edit-product-"+product.id} marketplace={this.state.marketplace} product={product}/>)
+          _.map(this.state.products, product => <EditProduct key={"edit-product-"+product.id} marketplace={this.state.marketplace} product={product} handleUpdate={this.handleUpdate}/>)
         }
       </div>
     )
