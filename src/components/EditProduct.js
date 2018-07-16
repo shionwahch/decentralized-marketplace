@@ -1,9 +1,17 @@
 import React, { Component } from 'react'
+import $ from 'jquery'
 
 class EditProduct extends Component {
   constructor(props) {
     super(props)
+
+    const { marketplace, product } = this.props
     this.state = { 
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: product.quantity,
+      marketplace: marketplace
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -14,9 +22,11 @@ class EditProduct extends Component {
     this.setState({ [event.target.name]: event.target.value })
   }
   
-  handleSubmit = async (event, marketplace) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      console.log("submitting")
+      console.log(this.state)
       // const newProduct = await Product.addProduct(marketplace, this.state.storefrontId, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
       // this.props.handleUpdate(newProduct)
     } catch (e) {
@@ -25,8 +35,7 @@ class EditProduct extends Component {
   }
 
   render() {
-    const { product } = this.props
-    const productKey = `edit-product-${product.id}`
+    const productKey = `edit-product-${this.state.id}`
 
     return (
       <div className="modal fade" id={productKey} tabIndex="-1" role="dialog" aria-labelledby={`${productKey}-label`} aria-hidden="true">
@@ -34,7 +43,7 @@ class EditProduct extends Component {
           <div className="modal-content">
 
             <div className="modal-header">
-              <h3 className="modal-title" id={`${productKey}-label`}>Edit {product.name}</h3>
+              <h3 className="modal-title" id={`${productKey}-label`}>Edit {this.state.name}</h3>
               <button type="button" className="close no-border" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -45,24 +54,26 @@ class EditProduct extends Component {
                 <fieldset>
                   <div className="pure-control-group">
                     <label htmlFor="name">Name</label>
-                    <input id="name" type="text" placeholder="Name" value={product.name} onChange={this.handleChange}/>
+                    <input name="name" type="text" placeholder="Name" value={this.state.name} onChange={this.handleChange}/>
                   </div>
 
                   <div className="pure-control-group">
                     <label htmlFor="price">Price</label>
-                    <input id="price" type="text" placeholder="Price (ETH)" value={product.price} onChange={this.handleChange}/>
+                    <input name="price" type="text" placeholder="Price (ETH)" value={this.state.price} onChange={this.handleChange}/>
                   </div>
 
                   <div className="pure-control-group">
                     <label htmlFor="quantity">Quantity</label>
-                    <input id="quantity" type="text" placeholder="Quantity" value={product.quantity} onChange={this.handleChange}/>
+                    <input name="quantity" type="text" placeholder="Quantity" value={this.state.quantity} onChange={this.handleChange}/>
                   </div>
                 </fieldset>
+
+                <button type="submit" className="pure-button pure-button-primary hidden" id={`${productKey}-submit`} onClick={this.handleSubmit}>Save</button>
               </form>
             </div>
 
             <div className="modal-footer">
-              <button type="button" className="pure-button pure-button-primary">Save</button>
+              <button type="button" className="pure-button pure-button-primary" onClick={() => $(`#${productKey}-submit`).click()}>Save</button>
               <button type="button" className="pure-button pure-button-secondary" data-dismiss="modal">Close</button>
             </div>
 

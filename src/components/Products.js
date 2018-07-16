@@ -81,7 +81,7 @@ class Products extends Component {
           </tbody>
         </table>
         {
-          _.map(this.state.products, product => <EditProduct key={"edit-product-"+product.id} product={product}/>)
+          _.map(this.state.products, product => <EditProduct key={"edit-product-"+product.id} marketplace={this.state.marketplace} product={product}/>)
         }
       </div>
     )
