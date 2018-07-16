@@ -17,6 +17,7 @@ class EditProduct extends Component {
 
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
   }
 
   handleChange = (event) => {
@@ -30,6 +31,17 @@ class EditProduct extends Component {
       this.props.handleUpdate(updatedProduct)
     } catch (e) {
       alert('Error: Only Store Owner is able to edit a Product')
+    }
+  }
+
+  handleDelete = async (event) => {
+    event.preventDefault();
+    console.log('Deleting ', this.state.id)
+    try {
+      // const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
+      // this.props.handleUpdate(updatedProduct)
+    } catch (e) {
+      alert('Error: Only Store Owner is able to delete a Product')
     }
   }
 
@@ -73,6 +85,7 @@ class EditProduct extends Component {
 
             <div className="modal-footer">
               <button type="button" className="pure-button pure-button-primary" data-dismiss="modal" onClick={() => $(`#${productKey}-submit`).click()}>Save</button>
+              <button type="button" className="pure-button pure-button-secondary" onClick={this.handleDelete}>Delete</button>
               <button type="button" className="pure-button pure-button-secondary" data-dismiss="modal">Close</button>
             </div>
 
