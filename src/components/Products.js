@@ -5,12 +5,10 @@ import _ from 'lodash'
 import contract from 'truffle-contract'
 import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
-import AddProduct from './AddProduct'
-import ProductTable from './ProductTable'
 import Product from '../models/Product'
-import EditProduct from './EditProduct'
+import ProductTable from './ProductTable'
 
-class ManageProducts extends Component {
+class Products extends Component {
   constructor(props) {
     super(props)
 
@@ -74,11 +72,7 @@ class ManageProducts extends Component {
       <div className="pure-u-1-1">
         <h1>Product List</h1>
   
-        <AddProduct marketplace={this.state.marketplace} storefrontId={this.state.storefrontId} handleAdd={this.handleAdd}/>
         <ProductTable products={this.state.products} />
-        {
-          _.map(this.state.products, product => <EditProduct key={"edit-product-"+product.id} marketplace={this.state.marketplace} product={product} handleUpdate={this.handleUpdate} handleDelete={this.handleDelete}/>)
-        }
       </div>
     )
   }
@@ -86,7 +80,7 @@ class ManageProducts extends Component {
 }
 
 
-ManageProducts.propTypes = {
+Products.propTypes = {
   products: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
@@ -98,4 +92,4 @@ ManageProducts.propTypes = {
   storefrontId: PropTypes.string
 }
 
-export default withRouter(ManageProducts)
+export default withRouter(Products)

@@ -4,11 +4,10 @@ import contract from 'truffle-contract'
 import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
 import getCurrentUser from '../utils/getCurrentUser'
-import AddStorefront from './AddStorefront'
 import StorefrontTable from './StorefrontTable'
 import Storefront from '../models/Storefront'
 
-class ManageStorefronts extends Component {
+class Storefronts extends Component {
   constructor(props) {
     super(props)
 
@@ -50,8 +49,7 @@ class ManageStorefronts extends Component {
     return (
       <div className="pure-u-1-1">
         <h1>Storefront List</h1>
-
-        <AddStorefront marketplace={this.state.marketplace} handleUpdate={this.handleUpdate}/>
+  
         <StorefrontTable storefronts={this.state.storefronts} />
       </div>
     )
@@ -60,7 +58,7 @@ class ManageStorefronts extends Component {
 }
 
 
-ManageStorefronts.propTypes = {
+Storefronts.propTypes = {
   storefronts: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.number,
@@ -75,4 +73,4 @@ ManageStorefronts.propTypes = {
   })
 }
 
-export default ManageStorefronts
+export default Storefronts

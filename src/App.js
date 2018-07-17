@@ -9,6 +9,8 @@ import Home from './components/Home'
 import ManageStoreOwners from './components/StoreOwners'
 import ManageStorefronts from './components/ManageStorefronts'
 import ManageProducts from './components/ManageProducts'
+import Storefronts from './components/Storefronts'
+import Products from './components/Products'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -59,6 +61,8 @@ class App extends Component {
             <Route path="/manage/store-owners" render={() => <ManageStoreOwners />} />
             <Route path="/manage/storefronts" exact render={() => <ManageStorefronts user={this.state.currentUser}/>} />
             <Route path="/manage/storefronts/:id(\d+)" render={() => <ManageProducts />} />
+            <Route path="/browse/storefronts" exact render={() => <Storefronts />} />
+            <Route path="/browse/storefronts/:id(\d+)" render={() => <Products />} />
             <Route path="/profile" render={() => <div className="pure-u-1-1"><h1>My Profile</h1></div>} />
           </div>
         </main>
