@@ -32,7 +32,7 @@ class Product {
   }
   
   static removeProduct =  async (marketplace, id) => {
-    const results = await marketplace.removeProduct(id)
+    const results = await marketplace.removeProduct(id, { gas: 50000 })
     const removedProduct = Product.getProductFromTransaction(results, Event.ProductRemoved)
     return removedProduct
   }
