@@ -7,7 +7,7 @@ import getWeb3 from '../utils/getWeb3'
 import StoreOwner from '../models/StoreOwner'
 import AddStoreOwner from './AddStoreOwner'
 
-class StoreOwners extends Component {
+class ManageStoreOwners extends Component {
   constructor(props) {
     super(props)
 
@@ -79,11 +79,11 @@ class StoreOwners extends Component {
 }
 
 
-StoreOwners.propTypes = {
+ManageStoreOwners.propTypes = {
   storeOwners: PropTypes.shape({
     owner: PropTypes.string,
     storefronts: PropTypes.arrayOf(PropTypes.number)
   })
 }
 
-export default StoreOwners
+export default ManageStoreOwners
