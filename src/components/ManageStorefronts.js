@@ -9,7 +9,7 @@ import getCurrentUser from '../utils/getCurrentUser'
 import AddStorefront from './AddStorefront'
 import Storefront from '../models/Storefront'
 
-class Storefronts extends Component {
+class ManageStorefronts extends Component {
   constructor(props) {
     super(props)
 
@@ -81,8 +81,7 @@ class Storefronts extends Component {
 
 }
 
-
-Storefronts.propTypes = {
+ManageStorefronts.propTypes = {
   storefronts: PropTypes.shape({
     name: PropTypes.string,
     products: PropTypes.shape({
@@ -94,4 +93,4 @@ Storefronts.propTypes = {
   })
 }
 
-export default Storefronts
+export default ManageStorefronts

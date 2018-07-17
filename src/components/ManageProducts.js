@@ -9,7 +9,7 @@ import AddProduct from './AddProduct'
 import Product from '../models/Product'
 import EditProduct from './EditProduct'
 
-class Products extends Component {
+class ManageProducts extends Component {
   constructor(props) {
     super(props)
 
@@ -111,8 +111,8 @@ class Products extends Component {
 
 }
 
-Products.propTypes = {
+ManageProducts.propTypes = {
   products: PropTypes.arrayOf(PropTypes.string)
 }
 
-export default withRouter(Products)
+export default withRouter(ManageProducts)
