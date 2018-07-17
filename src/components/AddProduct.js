@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Product from '../models/Product'
 
 class AddProduct extends Component {
@@ -43,6 +44,15 @@ class AddProduct extends Component {
     )
   }
 
+}
+
+
+AddProduct.propTypes = {
+  id: PropTypes.number,
+  name: PropTypes.string,
+  price: PropTypes.number,
+  quantity: PropTypes.number,
+  storefrontId: PropTypes.number,
 }
 
 export default AddProduct

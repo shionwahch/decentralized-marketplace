@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom';
 import Role from '../constants/role'
 import { getShortAddress } from '../utils/getCurrentUser'
@@ -15,6 +16,14 @@ const NavigationBar = ({ user }) => {
       </ul>
     </nav>
   )
+}
+
+
+NavigationBar.propTypes = {
+  user: PropTypes.shape({
+    account: PropTypes.string,
+    role: PropTypes.string
+  })
 }
 
 export default NavigationBar

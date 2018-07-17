@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import StoreOwner from '../models/StoreOwner'
 
 class AddStoreOwner extends Component {
@@ -36,7 +37,11 @@ class AddStoreOwner extends Component {
     )
   }
 
+}
 
+
+AddStoreOwner.propTypes = {
+  address: PropTypes.string
 }
 
 export default AddStoreOwner

@@ -80,7 +80,10 @@ class StoreOwners extends Component {
 
 
 StoreOwners.propTypes = {
-  storeOwners: PropTypes.arrayOf(PropTypes.string)
+  storeOwners: PropTypes.shape({
+    owner: PropTypes.string,
+    storefronts: PropTypes.arrayOf(PropTypes.number)
+  })
 }
 
 export default StoreOwners

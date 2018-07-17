@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Storefront from '../models/Storefront'
 
 class AddStorefront extends Component {
@@ -36,6 +37,12 @@ class AddStorefront extends Component {
     )
   }
 
+}
+
+
+AddStorefront.propTypes = {
+  id: PropTypes.number,
+  name: PropTypes.string,
 }
 
 export default AddStorefront

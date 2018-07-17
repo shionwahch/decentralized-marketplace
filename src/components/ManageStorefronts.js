@@ -81,15 +81,19 @@ class ManageStorefronts extends Component {
 
 }
 
+
 ManageStorefronts.propTypes = {
   storefronts: PropTypes.shape({
-    name: PropTypes.string,
-    products: PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-      price: PropTypes.number,
-      quantity: PropTypes.number,
-    })
+    id: PropTypes.number,
+    name: PropTypes.number,
+    products: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        price: PropTypes.number,
+        quantity: PropTypes.number,
+      })
+    )
   })
 }
 

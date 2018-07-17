@@ -11,6 +11,7 @@ const Home = ({ user }) => {
   )
 }
 
+
 Home.propTypes = {
   user: PropTypes.shape({
     account: PropTypes.string,

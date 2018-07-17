@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import $ from 'jquery'
 import Product from '../models/Product'
 
@@ -93,6 +94,15 @@ class EditProduct extends Component {
       </div>
     )
   }
+
+}
+
+
+EditProduct.propTypes = {
+  id: PropTypes.number,
+  name: PropTypes.string,
+  price: PropTypes.number,
+  quantity: PropTypes.number,
 }
 
 export default EditProduct;

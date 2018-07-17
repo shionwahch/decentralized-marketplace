@@ -20,7 +20,7 @@ class ManageProducts extends Component {
     this.state = {
       web3: null,
       products: [],
-      storefrontId: this.props.match.params.id,
+      storefrontId: parseInt(this.props.match.params.id, 10),
       marketplace: null
     }
   }
@@ -111,8 +111,17 @@ class ManageProducts extends Component {
 
 }
 
+
 ManageProducts.propTypes = {
-  products: PropTypes.arrayOf(PropTypes.string)
+  products: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      price: PropTypes.number,
+      quantity: PropTypes.number,
+    })
+  ),
+  storefrontId: PropTypes.string
 }
 
 export default withRouter(ManageProducts)
