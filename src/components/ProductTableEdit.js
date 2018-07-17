@@ -25,7 +25,7 @@ const ProductTable = ({ products }) => {
               <td>{product.name}</td>
               <td>{product.price}</td>
               <td>{product.quantity}</td>
-              <td><NavLink to={`#buy-product-${product.id}`} data-toggle="modal" data-target={`#buy-product-${product.id}`}>Buy</NavLink></td>
+              <td><NavLink to={`#edit-product-${product.id}`} data-toggle="modal" data-target={`#edit-product-${product.id}`}>Edit</NavLink></td>
             </tr>
           )
         })

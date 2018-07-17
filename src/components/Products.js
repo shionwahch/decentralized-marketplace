@@ -7,14 +7,13 @@ import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
 import Product from '../models/Product'
 import ProductTable from './ProductTable'
+import BuyProduct from './BuyProduct'
 
 class Products extends Component {
   constructor(props) {
     super(props)
 
-    this.handleAdd = this.handleAdd.bind(this)
-    this.handleUpdate = this.handleUpdate.bind(this)
-    this.handleDelete = this.handleDelete.bind(this)
+    this.handlePurchase = this.handlePurchase.bind(this)
 
     this.state = {
       web3: null,
@@ -44,27 +43,15 @@ class Products extends Component {
     })
   }
 
-  handleAdd(newProduct) {
-    this.setState({ products: this.state.products.concat([newProduct]) })
-  }
+  handlePurchase(updatedProduct) {
+    // const productIndex = _.findIndex(this.state.products, product => product.id === updatedProduct.id)
+    // if (productIndex === -1) return
 
-  handleUpdate(updatedProduct) {
-    const productIndex = _.findIndex(this.state.products, product => product.id === updatedProduct.id)
-    if (productIndex === -1) return
-
-    const currentProducts = this.state.products
-    currentProducts[productIndex] = updatedProduct
-    this.setState({
-      products: currentProducts
-    })
-  }
-
-  handleDelete(deletedProduct) {
-    const currentProducts = this.state.products
-    _.remove(currentProducts, product => product.id === deletedProduct.id)
-    this.setState({
-      products: currentProducts
-    })
+    // const currentProducts = this.state.products
+    // currentProducts[productIndex] = updatedProduct
+    // this.setState({
+    //   products: currentProducts
+    // })
   }
 
   render() {
@@ -73,6 +60,9 @@ class Products extends Component {
         <h1>Product List</h1>
   
         <ProductTable products={this.state.products} />
+        {
+          _.map(this.state.products, product => <BuyProduct key={"buy-product-"+product.id} marketplace={this.state.marketplace} product={product} handlePurchase={this.handlePurchase} />)
+        }
       </div>
     )
   }

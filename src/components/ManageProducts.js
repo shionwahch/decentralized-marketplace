@@ -6,7 +6,7 @@ import contract from 'truffle-contract'
 import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
 import AddProduct from './AddProduct'
-import ProductTable from './ProductTable'
+import ProductTableEdit from './ProductTableEdit'
 import Product from '../models/Product'
 import EditProduct from './EditProduct'
 
@@ -75,7 +75,7 @@ class ManageProducts extends Component {
         <h1>Product List</h1>
   
         <AddProduct marketplace={this.state.marketplace} storefrontId={this.state.storefrontId} handleAdd={this.handleAdd}/>
-        <ProductTable products={this.state.products} />
+        <ProductTableEdit products={this.state.products} />
         {
           _.map(this.state.products, product => <EditProduct key={"edit-product-"+product.id} marketplace={this.state.marketplace} product={product} handleUpdate={this.handleUpdate} handleDelete={this.handleDelete}/>)
         }
