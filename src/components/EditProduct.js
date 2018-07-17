@@ -16,7 +16,7 @@ class EditProduct extends Component {
     }
 
     this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleUpdate = this.handleUpdate.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
   }
 
@@ -24,7 +24,7 @@ class EditProduct extends Component {
     this.setState({ [event.target.name]: event.target.value })
   }
   
-  handleSubmit = async (event) => {
+  handleUpdate = async (event) => {
     event.preventDefault();
     try {
       const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
@@ -36,10 +36,9 @@ class EditProduct extends Component {
 
   handleDelete = async (event) => {
     event.preventDefault();
-    console.log('Deleting ', this.state.id)
     try {
-      // const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
-      // this.props.handleUpdate(updatedProduct)
+      const removedProduct = await Product.removeProduct(this.state.marketplace, this.state.id)
+      this.props.handleDelete(removedProduct)
     } catch (e) {
       alert('Error: Only Store Owner is able to delete a Product')
     }
@@ -79,13 +78,13 @@ class EditProduct extends Component {
                   </div>
                 </fieldset>
 
-                <button type="submit" className="pure-button pure-button-primary hidden" id={`${productKey}-submit`} onClick={this.handleSubmit}>Save</button>
+                <button type="submit" className="pure-button pure-button-primary hidden" id={`${productKey}-submit`} onClick={this.handleUpdate}>Save</button>
               </form>
             </div>
 
             <div className="modal-footer">
               <button type="button" className="pure-button pure-button-primary" data-dismiss="modal" onClick={() => $(`#${productKey}-submit`).click()}>Save</button>
-              <button type="button" className="pure-button pure-button-secondary" onClick={this.handleDelete}>Delete</button>
+              <button type="button" className="pure-button pure-button-secondary" data-dismiss="modal" onClick={this.handleDelete}>Delete</button>
               <button type="button" className="pure-button pure-button-secondary" data-dismiss="modal">Close</button>
             </div>
 

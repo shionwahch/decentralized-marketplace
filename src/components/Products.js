@@ -13,7 +13,10 @@ class Products extends Component {
   constructor(props) {
     super(props)
 
+    this.handleAdd = this.handleAdd.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
+
     this.state = {
       web3: null,
       products: [],
@@ -42,18 +45,27 @@ class Products extends Component {
     })
   }
 
-  handleUpdate(newProduct) {
-    const productIndex = _.findIndex(this.state.products, product => product.id === newProduct.id)
-    
-    if (productIndex === -1) {
-      this.setState({ products: this.state.products.concat([newProduct]) })
-    } else {
-      const currentProducts = this.state.products
-      currentProducts[productIndex] = newProduct
-      this.setState({
-        products: currentProducts
-      })
-    }
+  handleAdd(newProduct) {
+    this.setState({ products: this.state.products.concat([newProduct]) })
+  }
+
+  handleUpdate(updatedProduct) {
+    const productIndex = _.findIndex(this.state.products, product => product.id === updatedProduct.id)
+    if (productIndex === -1) return
+
+    const currentProducts = this.state.products
+    currentProducts[productIndex] = updatedProduct
+    this.setState({
+      products: currentProducts
+    })
+  }
+
+  handleDelete(deletedProduct) {
+    const currentProducts = this.state.products
+    _.remove(currentProducts, product => product.id === deletedProduct.id)
+    this.setState({
+      products: currentProducts
+    })
   }
 
   render() {
@@ -61,7 +73,7 @@ class Products extends Component {
       <div className="pure-u-1-1">
         <h1>Product List</h1>
   
-        <AddProduct marketplace={this.state.marketplace} storefrontId={this.state.storefrontId} handleUpdate={this.handleUpdate}/>
+        <AddProduct marketplace={this.state.marketplace} storefrontId={this.state.storefrontId} handleAdd={this.handleAdd}/>
   
         <table className="pure-table pure-table-horizontal no-border store-owner-list">
           <thead className="no-background-color">
@@ -91,7 +103,7 @@ class Products extends Component {
           </tbody>
         </table>
         {
-          _.map(this.state.products, product => <EditProduct key={"edit-product-"+product.id} marketplace={this.state.marketplace} product={product} handleUpdate={this.handleUpdate}/>)
+          _.map(this.state.products, product => <EditProduct key={"edit-product-"+product.id} marketplace={this.state.marketplace} product={product} handleUpdate={this.handleUpdate} handleDelete={this.handleDelete}/>)
         }
       </div>
     )

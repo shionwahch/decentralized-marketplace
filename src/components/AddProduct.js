@@ -24,7 +24,7 @@ class AddProduct extends Component {
     event.preventDefault();
     try {
       const newProduct = await Product.addProduct(marketplace, this.state.storefrontId, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
-      this.props.handleUpdate(newProduct)
+      this.props.handleAdd(newProduct)
     } catch (e) {
       alert('Error: Only Store Owner is able to add a Product')
     }

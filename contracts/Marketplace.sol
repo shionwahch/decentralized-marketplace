@@ -36,6 +36,7 @@ contract Marketplace is Ownable {
 
     event ProductAdded(uint id, string name, uint price, uint quantity);
     event ProductUpdated(uint id, string name, uint price, uint quantity);
+    event ProductRemoved(uint id, string name, uint price, uint quantity);
     event StorefrontAdded(uint id, string name, uint[] products);
     
     /**
@@ -66,6 +67,14 @@ contract Marketplace is Ownable {
         _;
     }
 
+    /**
+    * @dev Create invalid objects at index zero
+    */
+    constructor() public {
+        Product memory product;
+        products.push(product);
+    }
+    
     /**
     * @dev Retrieves store owner
     * @param _index Index of the store owner
@@ -186,6 +195,19 @@ contract Marketplace is Ownable {
         product.quantity = _quantity;
 
         emit ProductUpdated(_index, _name, _price, _quantity);
+
+        return _index;
+    }
+
+    /**
+    * @dev Removes product
+    * @param _index Index of the product
+    */
+    function removeProduct(uint _index) public payable returns (uint) {
+        Product memory product = products[_index];
+        delete products[_index];
+
+        emit ProductRemoved(product.id, product.name, product.price, product.quantity);
 
         return _index;
     }
