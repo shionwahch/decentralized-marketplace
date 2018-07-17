@@ -68,7 +68,7 @@ class ManageStorefronts extends Component {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td><NavLink to={`/storefronts/${storefront.id}`}>{storefront.name}</NavLink></td>
+                  <td><NavLink to={`/manage/storefronts/${storefront.id}`}>{storefront.name}</NavLink></td>
                 </tr>
               )
             })

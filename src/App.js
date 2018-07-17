@@ -56,9 +56,9 @@ class App extends Component {
         <main className="container">
           <div className="pure-g">
             <Route path="/" exact render={() => <Home user={this.state.currentUser}/>} />
-            <Route path="/store-owners" render={() => <ManageStoreOwners />} />
-            <Route path="/storefronts" exact render={() => <ManageStorefronts user={this.state.currentUser}/>} />
-            <Route path="/storefronts/:id(\d+)" render={() => <ManageProducts />} />
+            <Route path="/manage/store-owners" render={() => <ManageStoreOwners />} />
+            <Route path="/manage/storefronts" exact render={() => <ManageStorefronts user={this.state.currentUser}/>} />
+            <Route path="/manage/storefronts/:id(\d+)" render={() => <ManageProducts />} />
             <Route path="/profile" render={() => <div className="pure-u-1-1"><h1>My Profile</h1></div>} />
           </div>
         </main>
