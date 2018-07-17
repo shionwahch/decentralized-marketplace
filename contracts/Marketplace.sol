@@ -68,6 +68,15 @@ contract Marketplace is Ownable {
     }
 
     /**
+    * @dev Check if a product id is valid
+    * @param _productId Index of the product
+    */
+    modifier validProductId(uint _productId) {
+        require(_productId > 0);
+        _;
+    }
+
+    /**
     * @dev Create invalid objects at index zero
     */
     constructor() public {
@@ -99,7 +108,12 @@ contract Marketplace is Ownable {
     * @dev Add a new store owner
     * @param _storeOwner Address of the new store owner
     */   
-    function addStoreOwner(address _storeOwner) public onlyOwner uniqueStoreOwner(_storeOwner) returns (uint) {
+    function addStoreOwner(address _storeOwner) 
+        public 
+        onlyOwner 
+        uniqueStoreOwner(_storeOwner) 
+        returns (uint) 
+    {
         require(_storeOwner != address(0));
         
         StoreOwner memory storeOwner;
@@ -157,7 +171,10 @@ contract Marketplace is Ownable {
     * @param _quantity Quantity of the product
     */
     function addProduct(uint _storefrontId, string _name, uint _price, uint _quantity) 
-        isStoreOwnerOfStorefront(msg.sender, _storefrontId) public returns (uint) {
+        public 
+        isStoreOwnerOfStorefront(msg.sender, _storefrontId) 
+        returns (uint) 
+    {
         require(_price >= 0);
         require(_quantity >= 0);
 
@@ -188,7 +205,12 @@ contract Marketplace is Ownable {
     * @param _price Price of the product in ETH
     * @param _quantity Quantity of the product
     */
-    function updateProduct(uint _index, string _name, uint _price, uint _quantity) public payable returns (uint) {
+    function updateProduct(uint _index, string _name, uint _price, uint _quantity) 
+        public 
+        payable 
+        validProductId(_index) 
+        returns (uint) 
+    {
         Product storage product = products[_index];
         product.name = _name;
         product.price = _price;
@@ -203,7 +225,12 @@ contract Marketplace is Ownable {
     * @dev Removes product
     * @param _index Index of the product
     */
-    function removeProduct(uint _index) public payable returns (uint) {
+    function removeProduct(uint _index) 
+        public 
+        payable 
+        validProductId(_index) 
+        returns (uint) 
+    {
         Product memory product = products[_index];
         delete products[_index];
 
