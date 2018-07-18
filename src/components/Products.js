@@ -43,15 +43,15 @@ class Products extends Component {
     })
   }
 
-  handlePurchase(updatedProduct) {
-    // const productIndex = _.findIndex(this.state.products, product => product.id === updatedProduct.id)
-    // if (productIndex === -1) return
+  handlePurchase(purchasedProduct) {
+    const productIndex = _.findIndex(this.state.products, product => product.id === purchasedProduct.id)
+    if (productIndex === -1) return
 
-    // const currentProducts = this.state.products
-    // currentProducts[productIndex] = updatedProduct
-    // this.setState({
-    //   products: currentProducts
-    // })
+    const currentProducts = this.state.products
+    currentProducts[productIndex].quantity -= purchasedProduct.quantity
+    this.setState({
+      products: currentProducts
+    })
   }
 
   render() {

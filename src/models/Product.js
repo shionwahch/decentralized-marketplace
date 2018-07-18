@@ -1,3 +1,4 @@
+import Web3 from 'web3'
 import _ from 'lodash'
 import Event from '../constants/event'
 
@@ -20,7 +21,9 @@ class Product {
     const storefront = await marketplace.getStorefront(storefrontId)
     const productIds = storefront[2]
     const productList = _.map(productIds, async index => await marketplace.getProduct.call(index))
-    const products = _.map(await Promise.all(productList), results => new Product(results[0].toNumber(), results[1], results[2].toNumber(), results[3].toNumber()))
+    const products = _.map(await Promise.all(productList), results => {
+      return new Product(results[0].toNumber(), results[1], (new Web3()).fromWei(results[2], 'ether').toNumber(), results[3].toNumber())
+    })
     const validProducts = _.filter(products, product => product.id !== 0)
     return validProducts;
   }
@@ -37,6 +40,14 @@ class Product {
     return removedProduct
   }
 
+  static purchaseProduct = async (marketplace, id, addedQuantity, totalCost) => {
+    const results = await marketplace.purchaseProduct(id, addedQuantity, { value: (new Web3()).toWei(totalCost, 'ether') })
+    const transaction = results.logs[0]
+    const purchasedProduct = transaction.event === Event.ProductPurchased ? 
+      new Product(transaction.args.id.toNumber(), null, null, transaction.args.quantity.toNumber()) : null
+    return purchasedProduct
+  }
+
   static getProductFromTransaction = (transaction, event) => {
     return transaction.logs[0].event === event ? Product.mapEventToProduct(transaction.logs[0].args) : null
   }
@@ -44,7 +55,7 @@ class Product {
   static mapEventToProduct = (event) => {
     return new Product(event.id.toNumber(), event.name, event.price.toNumber(), event.quantity.toNumber())
   }
-
+  
 }
 
 export default Product;

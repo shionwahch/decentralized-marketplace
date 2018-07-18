@@ -13,7 +13,9 @@ class BuyProduct extends Component {
       name: product.name,
       price: product.price,
       quantity: product.quantity,
-      marketplace: marketplace
+      marketplace: marketplace,
+      addedQuantity: 1,
+      totalCost: product.price * 1
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -21,15 +23,17 @@ class BuyProduct extends Component {
   }
 
   handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
+    this.setState({ 
+      addedQuantity: event.target.value,
+      totalCost: this.state.price * event.target.value
+    })
   }
   
   handlePurchase = async (event) => {
     event.preventDefault();
     try {
-      console.log('Purchasing', this.state.id)
-      // const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
-      // this.props.handlePurchase(updatedProduct)
+      const purchasedProduct = await Product.purchaseProduct(this.state.marketplace, this.state.id, parseInt(this.state.addedQuantity, 10), parseInt(this.state.totalCost, 10))
+      this.props.handlePurchase(purchasedProduct)
     } catch (e) {
       alert('Error: Please check if you have enough ETH to purchase the Product')
     }
@@ -65,12 +69,12 @@ class BuyProduct extends Component {
 
                   <div className="pure-control-group">
                     <label htmlFor="quantity">Quantity</label>
-                    <input name="quantity" type="text" placeholder="Quantity" value={this.state.quantity} onChange={this.handleChange}/>
+                    <input name="quantity" type="number" min="1" max={this.state.quantity} placeholder="Quantity" defaultValue="1" onChange={this.handleChange}/>
                   </div>
 
                   <div className="pure-control-group">
                     <label htmlFor="total-cost">Total Cost</label>
-                    {this.state.price * this.state.quantity} ETH
+                    { this.state.addedQuantity === 0 ? this.state.price * 1 : this.state.price * this.state.addedQuantity} ETH
                   </div>
                 </fieldset>
 

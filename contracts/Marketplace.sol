@@ -37,6 +37,7 @@ contract Marketplace is Ownable {
     event ProductAdded(uint id, string name, uint price, uint quantity);
     event ProductUpdated(uint id, string name, uint price, uint quantity);
     event ProductRemoved(uint id, string name, uint price, uint quantity);
+    event ProductPurchased(uint id, uint quantity, uint cost, address purchaser);
     event StorefrontAdded(uint id, string name, uint[] products);
     
     /**
@@ -179,7 +180,7 @@ contract Marketplace is Ownable {
         require(_quantity >= 0);
 
         uint productIndex = products.length;
-        Product memory product = Product(productIndex, _name, _price, _quantity);
+        Product memory product = Product(productIndex, _name, _price * 1 ether, _quantity);
         products.push(product);
 
         storefronts[_storefrontId].products.push(productIndex);
@@ -213,7 +214,7 @@ contract Marketplace is Ownable {
     {
         Product storage product = products[_index];
         product.name = _name;
-        product.price = _price;
+        product.price = _price * 1 ether;
         product.quantity = _quantity;
 
         emit ProductUpdated(_index, _name, _price, _quantity);
@@ -235,6 +236,27 @@ contract Marketplace is Ownable {
         delete products[_index];
 
         emit ProductRemoved(product.id, product.name, product.price, product.quantity);
+
+        return _index;
+    }
+
+    /**
+    * @dev Purchases product
+    * @param _index Index of the product
+    * @param _quantity Quantity of the product to purchase
+    */
+    function purchaseProduct(uint _index, uint _quantity) 
+        public 
+        payable 
+        validProductId(_index) 
+        returns (uint) 
+    {
+        require(products[_index].quantity >= _quantity);
+        require(msg.value == products[_index].price * _quantity);
+
+        products[_index].quantity -= _quantity;
+
+        emit ProductPurchased(_index, _quantity, msg.value, msg.sender);
 
         return _index;
     }

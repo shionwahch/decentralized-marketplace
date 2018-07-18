@@ -102,6 +102,10 @@ form button {
   margin-left: 5px;
 }
 
+.pure-form input[type="number"] {
+  min-width: 100px;
+}
+
 ::placeholder {
   font-size: 0.6em;
 }
