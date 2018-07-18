@@ -18,6 +18,7 @@ contract Marketplace is Ownable {
         uint id;
         string name;
         uint[] products;
+        uint wallet;
     }
 
     struct Product {
@@ -25,6 +26,7 @@ contract Marketplace is Ownable {
         string name;
         uint price;
         uint quantity;
+        uint storefrontId;
     }
 
     StoreOwner[] private storeOwners;
@@ -146,6 +148,7 @@ contract Marketplace is Ownable {
         Storefront memory storefront;
         storefront.id = storefrontIndex;
         storefront.name = _name;
+        storefront.wallet = 0;
         storefronts.push(storefront);
 
         uint storeOwnerIndex = storeOwnerToIndex[msg.sender];
@@ -160,8 +163,8 @@ contract Marketplace is Ownable {
     * @dev Retrieves storefront
     * @param _index Index of the storefront
     */
-    function getStorefront(uint _index) public view returns (uint, string, uint[]) {
-        return (storefronts[_index].id, storefronts[_index].name, storefronts[_index].products);
+    function getStorefront(uint _index) public view returns (uint, string, uint[], uint) {
+        return (storefronts[_index].id, storefronts[_index].name, storefronts[_index].products, storefronts[_index].wallet);
     }
 
     /**
@@ -180,7 +183,7 @@ contract Marketplace is Ownable {
         require(_quantity >= 0);
 
         uint productIndex = products.length;
-        Product memory product = Product(productIndex, _name, _price * 1 ether, _quantity);
+        Product memory product = Product(productIndex, _name, _price * 1 ether, _quantity, _storefrontId);
         products.push(product);
 
         storefronts[_storefrontId].products.push(productIndex);
@@ -255,6 +258,7 @@ contract Marketplace is Ownable {
         require(msg.value == products[_index].price * _quantity);
 
         products[_index].quantity -= _quantity;
+        storefronts[products[_index].storefrontId].wallet += msg.value;
 
         emit ProductPurchased(_index, _quantity, msg.value, msg.sender);
 
