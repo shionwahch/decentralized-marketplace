@@ -197,7 +197,12 @@ contract Marketplace is Ownable {
     * @dev Retrieves product
     * @param _index Index of the product
     */
-    function getProduct(uint _index) public view returns (uint, string, uint, uint) {
+    function getProduct(uint _index) 
+        public 
+        view 
+        validProductId(_index)
+        returns (uint, string, uint, uint) 
+    {
         Product memory product = products[_index];
         return (product.id, product.name, product.price, product.quantity);
     }
@@ -212,7 +217,8 @@ contract Marketplace is Ownable {
     function updateProduct(uint _index, string _name, uint _price, uint _quantity) 
         public 
         payable 
-        validProductId(_index) 
+        isStoreOwnerOfStorefront(msg.sender, products[_index].storefrontId)
+        validProductId(_index)
         returns (uint) 
     {
         Product storage product = products[_index];
@@ -232,6 +238,7 @@ contract Marketplace is Ownable {
     function removeProduct(uint _index) 
         public 
         payable 
+        isStoreOwnerOfStorefront(msg.sender, products[_index].storefrontId)
         validProductId(_index) 
         returns (uint) 
     {
