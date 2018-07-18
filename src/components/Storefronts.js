@@ -16,6 +16,7 @@ class Storefronts extends Component {
     this.state = {
       web3: null,
       storefronts: [],
+      role: null,
       marketplace: null
     }
   }
@@ -37,6 +38,7 @@ class Storefronts extends Component {
     const storefronts = await Storefront.listStorefronts(marketplaceInstance, currentUser.account)
     this.setState({ 
       storefronts: storefronts,
+      role: currentUser.role,
       marketplace: marketplaceInstance
     })
   }
@@ -50,7 +52,7 @@ class Storefronts extends Component {
       <div className="pure-u-1-1">
         <h1>Storefront List</h1>
   
-        <StorefrontTable storefronts={this.state.storefronts} />
+        <StorefrontTable storefronts={this.state.storefronts} role={this.state.role} />
       </div>
     )
   }
@@ -69,7 +71,8 @@ Storefronts.propTypes = {
         price: PropTypes.number,
         quantity: PropTypes.number,
       })
-    )
+    ),
+    role: PropTypes.string
   })
 }
 

@@ -17,6 +17,7 @@ class ManageStorefronts extends Component {
     this.state = {
       web3: null,
       storefronts: [],
+      role: null,
       marketplace: null
     }
   }
@@ -38,6 +39,7 @@ class ManageStorefronts extends Component {
     const storefronts = await Storefront.listStorefronts(marketplaceInstance, currentUser.account)
     this.setState({ 
       storefronts: storefronts,
+      role: currentUser.role,
       marketplace: marketplaceInstance
     })
   }
@@ -52,7 +54,7 @@ class ManageStorefronts extends Component {
         <h1>Storefront List</h1>
 
         <AddStorefront marketplace={this.state.marketplace} handleUpdate={this.handleUpdate}/>
-        <StorefrontTable storefronts={this.state.storefronts} />
+        <StorefrontTable storefronts={this.state.storefronts} role={this.state.role} />
       </div>
     )
   }
@@ -71,7 +73,8 @@ ManageStorefronts.propTypes = {
         price: PropTypes.number,
         quantity: PropTypes.number,
       })
-    )
+    ),
+    role: PropTypes.string
   })
 }
 
