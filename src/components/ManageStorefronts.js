@@ -53,7 +53,7 @@ class ManageStorefronts extends Component {
         <h1>Storefront List</h1>
 
         <AddStorefront marketplace={this.state.marketplace} handleUpdate={this.handleUpdate}/>
-        <StorefrontTableWithdraw storefronts={this.state.storefronts} />
+        <StorefrontTableWithdraw marketplace={this.state.marketplace} storefronts={this.state.storefronts} />
       </div>
     )
   }

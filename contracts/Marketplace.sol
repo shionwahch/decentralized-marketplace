@@ -19,6 +19,7 @@ contract Marketplace is Ownable {
         string name;
         uint[] products;
         uint wallet;
+        uint storeOwnerId;
     }
 
     struct Product {
@@ -41,6 +42,7 @@ contract Marketplace is Ownable {
     event ProductRemoved(uint id, string name, uint price, uint quantity);
     event ProductPurchased(uint id, uint quantity, uint cost, address purchaser);
     event StorefrontAdded(uint id, string name, uint[] products);
+    event StorefrontWalletWithdrew(uint id, uint amount, address withdrawer);
     
     /**
     * @dev Throws exception if store owner exists
@@ -149,6 +151,7 @@ contract Marketplace is Ownable {
         storefront.id = storefrontIndex;
         storefront.name = _name;
         storefront.wallet = 0;
+        storefront.storeOwnerId = storeOwnerToIndex[msg.sender];
         storefronts.push(storefront);
 
         uint storeOwnerIndex = storeOwnerToIndex[msg.sender];
@@ -165,6 +168,32 @@ contract Marketplace is Ownable {
     */
     function getStorefront(uint _index) public view returns (uint, string, uint[], uint) {
         return (storefronts[_index].id, storefronts[_index].name, storefronts[_index].products, storefronts[_index].wallet);
+    }
+
+    /**
+    * @dev Withdraws all amount in Storefront wallet
+    * @param _storefrontId Index of the storefront
+    */
+    function withdrawFromStorefront(uint _storefrontId) 
+        public 
+        payable 
+        isStoreOwnerOfStorefront(msg.sender, _storefrontId)
+        returns (uint)
+    {
+        require(storefronts[_storefrontId].wallet > 0);
+
+        uint amount = storefronts[_storefrontId].wallet;
+        uint storeOwnerId = storefronts[_storefrontId].storeOwnerId;
+        address storeOwner = storeOwners[storeOwnerId].owner;
+
+        require(storeOwner != address(0));
+
+        storefronts[_storefrontId].wallet = 0;
+        storeOwner.transfer(amount);
+
+        emit StorefrontWalletWithdrew(_storefrontId, amount, msg.sender);
+        
+        return amount;
     }
 
     /**

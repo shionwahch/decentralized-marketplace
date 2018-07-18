@@ -27,6 +27,13 @@ class Storefront {
     return newStorefront
   }
 
+  static withdrawFromStorefront = async (marketplace, storefrontId) => {
+    const results = await marketplace.withdrawFromStorefront(storefrontId, { gas: 50000 })
+    // const newStorefront = results.logs[0].event === Event.StorefrontAdded ? 
+    //   Storefront.mapStorefrontAddedEventToStorefront(results.logs[0].args) : null
+    return results
+  }
+
   static mapStorefrontAddedEventToStorefront = (event) => {
     return new Storefront(event.id.toNumber(), event.name, event.products)
   }
