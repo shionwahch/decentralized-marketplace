@@ -1,0 +1,105 @@
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import Web3 from 'web3'
+import $ from 'jquery'
+import StoreOwner from '../models/StoreOwner'
+import Storefront from '../models/Storefront'
+
+class WithdrawWallet extends Component {
+  constructor(props) {
+    super(props)
+    const { marketplace, storefront } = this.props
+    this.state = { 
+      id: storefront.id,
+      name: storefront.name,
+      products: storefront.products,
+      wallet: (new Web3()).fromWei(storefront.wallet, 'ether'),
+      storeOwner: null,
+      storeOwnerId: storefront.storeOwnerId,
+      marketplace: marketplace
+    }
+
+    this.handleWithdraw = this.handleWithdraw.bind(this)
+  }
+
+  async componentWillMount() {
+    this.initializeData()
+  }
+
+  async initializeData() {
+    const storeOwner = await StoreOwner.getById(this.state.marketplace, this.state.storeOwnerId)
+    this.setState({ 
+      storeOwner: storeOwner
+    })
+  }
+  
+  handleWithdraw = async (event) => {
+    event.preventDefault();
+    try {
+      await Storefront.withdrawFromStorefront(this.state.marketplace, this.state.id)
+      this.props.handleWithdraw(this.state.id)
+    } catch (e) {
+      alert('Error: Only Store Owner is able to withdraw from their Storefront')
+    }
+  }
+
+  render() {
+    const storefrontKey = `withdraw-storefront-${this.state.id}`
+
+    return (
+      <div className="modal fade" id={storefrontKey} tabIndex="-1" role="dialog" aria-labelledby={`${storefrontKey}-label`} aria-hidden="true">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+
+            <div className="modal-header">
+              <h3 className="modal-title" id={`${storefrontKey}-label`}>Withdraw from Storefront</h3>
+              <button type="button" className="close no-border" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <form className="pure-form pure-form-aligned">
+                <fieldset>
+                  <div className="pure-control-group">
+                    <label htmlFor="name">Name</label>
+                    {this.state.name}
+                  </div>
+
+                  <div className="pure-control-group">
+                    <label htmlFor="price">Wallet</label>
+                    {this.state.wallet} ETH
+                  </div>
+
+                  <div className="pure-control-group">
+                    <label htmlFor="withdraw-to">Withdraw To</label>
+                    {this.state.storeOwner ? this.state.storeOwner.owner : null}
+                  </div>
+                </fieldset>
+
+                <button type="submit" className="pure-button pure-button-primary hidden" id={`${storefrontKey}-submit`} onClick={this.handleWithdraw}>Withdraw</button>
+              </form>
+            </div>
+
+            <div className="modal-footer">
+              <button type="button" className="pure-button pure-button-primary" data-dismiss="modal" onClick={() => $(`#${storefrontKey}-submit`).click()}>Withdraw ({this.state.wallet} ETH)</button>
+              <button type="button" className="pure-button pure-button-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+}
+
+
+WithdrawWallet.propTypes = {
+  id: PropTypes.number,
+  name: PropTypes.string,
+  price: PropTypes.number,
+  quantity: PropTypes.number,
+}
+
+export default WithdrawWallet;

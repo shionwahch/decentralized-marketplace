@@ -3,11 +3,12 @@ import Event from '../constants/event'
 
 class Storefront {
 
-  constructor(id, name, products = [], wallet = 0) {
+  constructor(id, name, products = [], wallet = 0, storeOwnerId = null) {
     this.id = id
     this.name = name
     this.products = products
     this.wallet = wallet
+    this.storeOwnerId = storeOwnerId
   }
 
   static listStorefronts = async (marketplace, owner) => {
@@ -15,7 +16,7 @@ class Storefront {
     const storefrontIds = storeOwner[1];
     const storefrontList = _.map(storefrontIds, async index => await marketplace.getStorefront.call(index))
     const storefronts = _.map(await Promise.all(storefrontList), results => {
-      return new Storefront(results[0].toNumber(), results[1], results[2], results[3].toNumber())
+      return new Storefront(results[0].toNumber(), results[1], results[2], results[3].toNumber(), results[4].toNumber())
     })
     return storefronts;
   }

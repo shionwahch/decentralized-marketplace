@@ -17,7 +17,6 @@ class ManageStorefronts extends Component {
     this.state = {
       web3: null,
       storefronts: [],
-      role: null,
       marketplace: null
     }
   }

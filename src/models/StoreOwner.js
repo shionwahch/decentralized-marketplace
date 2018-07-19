@@ -7,6 +7,11 @@ class StoreOwner {
     this.storefronts = storefronts
   }
 
+  static getById = async (marketplace, storeOwnerId) => {
+    const results = await marketplace.getStoreOwner.call(storeOwnerId)
+    return new StoreOwner(results[0], results[1])
+  }
+
   static listStoreOwners = async (marketplace) => {
     const storeOwnerCount = await marketplace.storeOwnerCount.call()
     const storeOwnerList = _.map(_.range(storeOwnerCount).map(async index => await marketplace.getStoreOwner.call(index)))

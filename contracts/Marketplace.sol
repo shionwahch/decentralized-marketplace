@@ -166,8 +166,9 @@ contract Marketplace is Ownable {
     * @dev Retrieves storefront
     * @param _index Index of the storefront
     */
-    function getStorefront(uint _index) public view returns (uint, string, uint[], uint) {
-        return (storefronts[_index].id, storefronts[_index].name, storefronts[_index].products, storefronts[_index].wallet);
+    function getStorefront(uint _index) public view returns (uint, string, uint[], uint, uint) {
+        return (storefronts[_index].id, storefronts[_index].name, storefronts[_index].products, 
+            storefronts[_index].wallet, storefronts[_index].storeOwnerId);
     }
 
     /**
