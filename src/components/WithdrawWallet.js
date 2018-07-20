@@ -39,12 +39,14 @@ class WithdrawWallet extends Component {
       await Storefront.withdrawFromStorefront(this.state.marketplace, this.state.id)
       this.props.handleWithdraw(this.state.id)
     } catch (e) {
+      console.log(e)
       alert('Error: Only Store Owner is able to withdraw from their Storefront')
     }
   }
 
   render() {
     const storefrontKey = `withdraw-storefront-${this.state.id}`
+    const storeOwnerAddress = this.state.storeOwner ? this.state.storeOwner.owner : null
 
     return (
       <div className="modal fade" id={storefrontKey} tabIndex="-1" role="dialog" aria-labelledby={`${storefrontKey}-label`} aria-hidden="true">
@@ -73,7 +75,7 @@ class WithdrawWallet extends Component {
 
                   <div className="pure-control-group">
                     <label htmlFor="withdraw-to">Withdraw To</label>
-                    {this.state.storeOwner ? this.state.storeOwner.owner : null}
+                    <span className="withdraw-wallet">{storeOwnerAddress}</span>
                   </div>
                 </fieldset>
 

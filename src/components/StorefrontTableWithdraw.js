@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import _ from 'lodash'
+import $ from 'jquery'
 import Web3 from 'web3'
 import WithdrawWallet from './WithdrawWallet'
 
@@ -12,8 +13,7 @@ class StorefrontTableWithdraw extends Component {
 	}
 
 	handleWithdraw = (storefrontId) => {
-		event.preventDefault();
-		console.log('withdrew from', storefrontId, 'set wallet to 0')
+		$(`#storefront-${storefrontId}-wallet`).text(0)
   }
 
 	render() {
@@ -38,7 +38,7 @@ class StorefrontTableWithdraw extends Component {
 								<tr key={index}>
 									<td>{index + 1}</td>
 									<td><NavLink to={`storefronts/${storefront.id}`}>{storefront.name}</NavLink></td>
-									<td>{(new Web3()).fromWei(storefront.wallet, 'ether')}</td>
+									<td id={`storefront-${storefront.id}-wallet`}>{(new Web3()).fromWei(storefront.wallet, 'ether')}</td>
 									<td><NavLink to={`#withdraw-storefront-${storefront.id}`} data-toggle="modal" data-target={`#withdraw-storefront-${storefront.id}`}>Withdraw</NavLink></td>
 									{/* <td><NavLink to={`#withdraw-storefront-${storefront.id}`} data-toggle="modal" data-target={`#withdraw-storefront-${storefront.id}`} onClick={(event) => this.handleWithdraw(event, marketplace, storefront.id)}>Withdraw</NavLink></td> */}
 								</tr>

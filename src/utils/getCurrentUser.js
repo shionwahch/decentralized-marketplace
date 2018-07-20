@@ -17,7 +17,7 @@ const getCurrentUser = async (marketplaceInstance, web3) => {
   }
 }
 
-const getShortAddress = (address) => address.substr(0,6)
+const getShortAddress = (address) => address ? address.substr(0,6) : ''
 
 export { getShortAddress }
 export default getCurrentUser

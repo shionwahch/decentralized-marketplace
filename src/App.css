@@ -109,3 +109,7 @@ form button {
 ::placeholder {
   font-size: 0.6em;
 }
+
+.withdraw-wallet {
+  font-size: 11px;
+}
