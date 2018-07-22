@@ -41,8 +41,9 @@ contract Marketplace is Ownable {
     event ProductUpdated(uint id, string name, uint price, uint quantity);
     event ProductRemoved(uint id, string name, uint price, uint quantity);
     event ProductPurchased(uint id, uint quantity, uint cost, address purchaser);
-    event StorefrontAdded(uint id, string name, uint[] products);
+    event StorefrontAdded(uint id, string name, uint[] products, uint storeOwnerId);
     event StorefrontWalletWithdrew(uint id, uint amount, address withdrawer);
+    event StorefrontWalletWithdrewAll(uint[] ids, uint amount, address withdrawer);
     
     /**
     * @dev Throws exception if store owner exists
@@ -157,7 +158,7 @@ contract Marketplace is Ownable {
         uint storeOwnerIndex = storeOwnerToIndex[msg.sender];
         storeOwners[storeOwnerIndex].storefronts.push(storefrontIndex);
 
-        emit StorefrontAdded(storefrontIndex, _name, new uint[](0));
+        emit StorefrontAdded(storefrontIndex, _name, new uint[](0), storeOwnerIndex);
 
         return storefrontIndex;
     }
@@ -185,16 +186,52 @@ contract Marketplace is Ownable {
 
         uint amount = storefronts[_storefrontId].wallet;
         uint storeOwnerId = storefronts[_storefrontId].storeOwnerId;
-        address storeOwner = storeOwners[storeOwnerId].owner;
+        address storeOwnerAddress = storeOwners[storeOwnerId].owner;
 
-        require(storeOwner != address(0));
+        require(storeOwnerAddress != address(0));
+        require(address(this).balance >= amount);
 
         storefronts[_storefrontId].wallet = 0;
-        storeOwner.transfer(amount);
+        storeOwnerAddress.transfer(amount);
 
         emit StorefrontWalletWithdrew(_storefrontId, amount, msg.sender);
         
         return amount;
+    }
+
+    /**
+    * @dev Withdraws all amount in Storefront wallet
+    */
+    function withdrawFromAllStorefronts() 
+        public 
+        payable 
+        returns (uint)
+    {
+        StoreOwner memory storeOwner = storeOwners[storeOwnerToIndex[msg.sender]];
+        require(storeOwner.owner != address(0));
+
+        uint totalAmount = 0;
+        uint[] memory storefrontIds = storeOwner.storefronts;
+
+        for (uint i = 0 ; i < storefrontIds.length ; i++) {
+            totalAmount += storefronts[storefrontIds[i]].wallet;
+        }
+
+        require(totalAmount > 0);
+        require(address(this).balance >= totalAmount);
+
+        for (uint j = 0 ; j < storefrontIds.length ; j++) {
+            storefronts[storefrontIds[j]].wallet = 0;
+        }
+
+        address storeOwnerAddress = storeOwner.owner;
+        require(storeOwnerAddress != address(0));
+
+        storeOwnerAddress.transfer(totalAmount);
+
+        emit StorefrontWalletWithdrewAll(storefrontIds, totalAmount, msg.sender);
+        
+        return totalAmount;
     }
 
     /**

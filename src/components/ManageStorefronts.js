@@ -17,7 +17,8 @@ class ManageStorefronts extends Component {
     this.state = {
       web3: null,
       storefronts: [],
-      marketplace: null
+      marketplace: null,
+      currentUser: null
     }
   }
 
@@ -38,7 +39,8 @@ class ManageStorefronts extends Component {
     const storefronts = await Storefront.listStorefronts(marketplaceInstance, currentUser.account)
     this.setState({ 
       storefronts: storefronts,
-      marketplace: marketplaceInstance
+      marketplace: marketplaceInstance,
+      currentUser: currentUser
     })
   }
 
@@ -52,7 +54,7 @@ class ManageStorefronts extends Component {
         <h1>Storefront List</h1>
 
         <AddStorefront marketplace={this.state.marketplace} handleUpdate={this.handleUpdate}/>
-        <StorefrontTableWithdraw marketplace={this.state.marketplace} storefronts={this.state.storefronts} />
+        <StorefrontTableWithdraw marketplace={this.state.marketplace} storefronts={this.state.storefronts} user={this.state.currentUser} />
       </div>
     )
   }
@@ -63,7 +65,7 @@ class ManageStorefronts extends Component {
 ManageStorefronts.propTypes = {
   storefronts: PropTypes.shape({
     id: PropTypes.number,
-    name: PropTypes.number,
+    name: PropTypes.string,
     products: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number,
@@ -72,7 +74,8 @@ ManageStorefronts.propTypes = {
         quantity: PropTypes.number,
       })
     )
-  })
+  }),
+  wallet: PropTypes.number,
 }
 
 export default ManageStorefronts

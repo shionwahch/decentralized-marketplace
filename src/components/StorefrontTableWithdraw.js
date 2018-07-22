@@ -4,20 +4,26 @@ import _ from 'lodash'
 import $ from 'jquery'
 import Web3 from 'web3'
 import WithdrawWallet from './WithdrawWallet'
+import WithdrawWalletAll from './WithdrawWalletAll'
 
 class StorefrontTableWithdraw extends Component {
   constructor(props) {
     super(props)
 
     this.handleWithdraw = this.handleWithdraw.bind(this)
+    this.handleWithdrawAll = this.handleWithdrawAll.bind(this)
 	}
 
 	handleWithdraw = (storefrontId) => {
 		$(`#storefront-${storefrontId}-wallet`).text(0)
+	}
+	
+	handleWithdrawAll = () => {
+		$("td[id$='-wallet']").text(0)
   }
 
 	render() {
-		const { marketplace, storefronts } = this.props
+		const { marketplace, storefronts, user } = this.props
 
 		return (
 			<div className="pure-u-1-1">
@@ -40,16 +46,27 @@ class StorefrontTableWithdraw extends Component {
 									<td><NavLink to={`storefronts/${storefront.id}`}>{storefront.name}</NavLink></td>
 									<td id={`storefront-${storefront.id}-wallet`}>{(new Web3()).fromWei(storefront.wallet, 'ether')}</td>
 									<td><NavLink to={`#withdraw-storefront-${storefront.id}`} data-toggle="modal" data-target={`#withdraw-storefront-${storefront.id}`}>Withdraw</NavLink></td>
-									{/* <td><NavLink to={`#withdraw-storefront-${storefront.id}`} data-toggle="modal" data-target={`#withdraw-storefront-${storefront.id}`} onClick={(event) => this.handleWithdraw(event, marketplace, storefront.id)}>Withdraw</NavLink></td> */}
 								</tr>
 							)
 						})
+					}
+					{
+						storefronts.length === 0 ? null :
+							(
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td><NavLink to={`#withdraw-storefront-all`} data-toggle="modal" data-target={`#withdraw-storefront-all`}>Withdraw All</NavLink></td>
+								</tr>
+							)
 					}
 					</tbody>
 				</table>
 				{
 					_.map(storefronts, storefront => <WithdrawWallet key={"withdraw-storefront-"+storefront.id} marketplace={marketplace} storefront={storefront} handleWithdraw={this.handleWithdraw} />)
 				}
+				<WithdrawWalletAll key={"withdraw-storefront-all"} marketplace={marketplace} user={user} storefronts={storefronts} handleWithdrawAll={this.handleWithdrawAll} />
 			</div>
 		)
 	}

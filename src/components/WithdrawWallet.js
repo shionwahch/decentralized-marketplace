@@ -39,7 +39,6 @@ class WithdrawWallet extends Component {
       await Storefront.withdrawFromStorefront(this.state.marketplace, this.state.id)
       this.props.handleWithdraw(this.state.id)
     } catch (e) {
-      console.log(e)
       alert('Error: Only Store Owner is able to withdraw from their Storefront')
     }
   }
