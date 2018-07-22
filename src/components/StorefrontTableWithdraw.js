@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import _ from 'lodash'
 import $ from 'jquery'
-import Web3 from 'web3'
+import { weiToEther } from '../utils/web3Utils'
 import WithdrawWallet from './WithdrawWallet'
 import WithdrawWalletAll from './WithdrawWalletAll'
 
@@ -44,7 +44,7 @@ class StorefrontTableWithdraw extends Component {
 								<tr key={index}>
 									<td>{index + 1}</td>
 									<td><NavLink to={`storefronts/${storefront.id}`}>{storefront.name}</NavLink></td>
-									<td id={`storefront-${storefront.id}-wallet`}>{(new Web3()).fromWei(storefront.wallet, 'ether')}</td>
+									<td id={`storefront-${storefront.id}-wallet`}>{weiToEther(storefront.wallet)}</td>
 									<td><NavLink to={`#withdraw-storefront-${storefront.id}`} data-toggle="modal" data-target={`#withdraw-storefront-${storefront.id}`}>Withdraw</NavLink></td>
 								</tr>
 							)

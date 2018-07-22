@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Web3 from 'web3'
 import $ from 'jquery'
+import { weiToEther } from '../utils/web3Utils'
 import StoreOwner from '../models/StoreOwner'
 import Storefront from '../models/Storefront'
 
@@ -13,7 +13,7 @@ class WithdrawWallet extends Component {
       id: storefront.id,
       name: storefront.name,
       products: storefront.products,
-      wallet: (new Web3()).fromWei(storefront.wallet, 'ether'),
+      wallet: weiToEther(storefront.wallet),
       storeOwner: null,
       storeOwnerId: storefront.storeOwnerId,
       marketplace: marketplace

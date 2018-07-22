@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import Web3 from 'web3'
 import $ from 'jquery'
+import { weiToEther } from '../utils/web3Utils'
 import Storefront from '../models/Storefront'
 
 class WithdrawWalletAll extends Component {
@@ -26,7 +26,7 @@ class WithdrawWalletAll extends Component {
     const storefrontKey = `withdraw-storefront-all`
     const { marketplace, user, storefronts } = this.props
     const walletTotal = _.reduce(_.map(storefronts, s => s.wallet), (sum, wallet) => sum + wallet, 0)
-    const walletDisplay = (new Web3()).fromWei(walletTotal, 'ether')
+    const walletDisplay = weiToEther(walletTotal)
 
     return (
       <div className="modal fade" id={storefrontKey} tabIndex="-1" role="dialog" aria-labelledby={`${storefrontKey}-label`} aria-hidden="true">

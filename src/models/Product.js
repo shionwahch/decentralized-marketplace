@@ -1,7 +1,6 @@
-import Web3 from 'web3'
 import _ from 'lodash'
 import Event from '../constants/event'
-import { weiToEther } from '../utils/web3Utils'
+import { weiToEther, etherToWei } from '../utils/web3Utils'
 
 class Product {
   
@@ -43,7 +42,7 @@ class Product {
   }
 
   static purchaseProduct = async (marketplace, id, addedQuantity, totalCost) => {
-    const results = await marketplace.purchaseProduct(id, addedQuantity, { value: (new Web3()).toWei(totalCost, 'ether') })
+    const results = await marketplace.purchaseProduct(id, addedQuantity, { value: etherToWei(totalCost) })
     const transaction = results.logs[0]
     const purchasedProduct = transaction.event === Event.ProductPurchased ? 
       new Product(transaction.args.id.toNumber(), null, null, transaction.args.quantity.toNumber()) : null
