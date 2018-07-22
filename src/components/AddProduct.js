@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Product from '../models/Product'
+import { etherToWei } from '../utils/web3Utils'
 
 class AddProduct extends Component {
   constructor(props) {
@@ -24,7 +25,7 @@ class AddProduct extends Component {
   handleSubmit = async (event, marketplace) => {
     event.preventDefault();
     try {
-      const newProduct = await Product.addProduct(marketplace, this.state.storefrontId, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
+      const newProduct = await Product.addProduct(marketplace, this.state.storefrontId, this.state.name, etherToWei(this.state.price), parseInt(this.state.quantity, 10))
       this.props.handleAdd(newProduct)
     } catch (e) {
       alert('Error: Only Store Owner is able to add a Product')

@@ -25,18 +25,22 @@ class BuyProduct extends Component {
   handleChange = (event) => {
     this.setState({ 
       addedQuantity: event.target.value,
-      totalCost: this.state.price * event.target.value
+      totalCost: this.calculateTotalPrice(this.state.price, event.target.value)
     })
   }
   
   handlePurchase = async (event) => {
     event.preventDefault();
     try {
-      const purchasedProduct = await Product.purchaseProduct(this.state.marketplace, this.state.id, parseInt(this.state.addedQuantity, 10), parseInt(this.state.totalCost, 10))
+      const purchasedProduct = await Product.purchaseProduct(this.state.marketplace, this.state.id, parseInt(this.state.addedQuantity, 10), this.state.totalCost)
       this.props.handlePurchase(purchasedProduct)
     } catch (e) {
       alert('Error: Please check if you have enough ETH to purchase the Product')
     }
+  }
+
+  calculateTotalPrice = (price, quantity) => {
+    return Number((price * quantity).toFixed(12))
   }
 
   render() {
@@ -74,7 +78,7 @@ class BuyProduct extends Component {
 
                   <div className="pure-control-group">
                     <label htmlFor="total-cost">Total Cost</label>
-                    { this.state.addedQuantity === 0 ? this.state.price * 1 : this.state.price * this.state.addedQuantity} ETH
+                    { this.state.addedQuantity === 0 ? this.state.price * 1 : this.calculateTotalPrice(this.state.price, this.state.addedQuantity)} ETH
                   </div>
                 </fieldset>
 

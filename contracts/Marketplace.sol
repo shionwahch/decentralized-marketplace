@@ -250,7 +250,7 @@ contract Marketplace is Ownable {
         require(_quantity >= 0);
 
         uint productIndex = products.length;
-        Product memory product = Product(productIndex, _name, _price * 1 ether, _quantity, _storefrontId);
+        Product memory product = Product(productIndex, _name, _price * 1 wei, _quantity, _storefrontId);
         products.push(product);
 
         storefronts[_storefrontId].products.push(productIndex);

@@ -1,6 +1,7 @@
 import Web3 from 'web3'
 import _ from 'lodash'
 import Event from '../constants/event'
+import { weiToEther } from '../utils/web3Utils'
 
 class Product {
   
@@ -12,6 +13,7 @@ class Product {
   }
 
   static addProduct = async (marketplace, storefrontId, name, price, quantity) => {
+    console.log(price)
     const results = await marketplace.addProduct(storefrontId, name, price, quantity)
     const newProduct = Product.getProductFromTransaction(results, Event.ProductAdded)
     return newProduct
@@ -22,7 +24,7 @@ class Product {
     const productIds = storefront[2]
     const productList = _.map(productIds, async index => await marketplace.getProduct.call(index))
     const products = _.map(await Promise.all(productList), results => {
-      return new Product(results[0].toNumber(), results[1], (new Web3()).fromWei(results[2], 'ether').toNumber(), results[3].toNumber())
+      return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber())
     })
     const validProducts = _.filter(products, product => product.id !== 0)
     return validProducts;
@@ -53,7 +55,7 @@ class Product {
   }
   
   static mapEventToProduct = (event) => {
-    return new Product(event.id.toNumber(), event.name, event.price.toNumber(), event.quantity.toNumber())
+    return new Product(event.id.toNumber(), event.name, weiToEther(event.price.toNumber()), event.quantity.toNumber())
   }
   
 }
