@@ -19,7 +19,7 @@ class StorefrontTableWithdraw extends Component {
 	}
 	
 	handleWithdrawAll = () => {
-		$("td[id$='-wallet']").text(0)
+		$(`td[id$='-wallet']`).text(0)
   }
 
 	render() {

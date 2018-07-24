@@ -290,7 +290,7 @@ contract Marketplace is Ownable {
     {
         Product storage product = products[_index];
         product.name = _name;
-        product.price = _price * 1 ether;
+        product.price = _price * 1 wei;
         product.quantity = _quantity;
 
         emit ProductUpdated(_index, _name, _price, _quantity);

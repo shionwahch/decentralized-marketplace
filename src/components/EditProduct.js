@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
 import Product from '../models/Product'
+import { etherToWei } from '../utils/web3Utils'
 
 class EditProduct extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class EditProduct extends Component {
   handleUpdate = async (event) => {
     event.preventDefault();
     try {
-      const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, parseInt(this.state.price, 10), parseInt(this.state.quantity, 10))
+      const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, etherToWei(this.state.price), parseInt(this.state.quantity, 10))
       this.props.handleUpdate(updatedProduct)
     } catch (e) {
       alert('Error: Only Store Owner is able to edit a Product')

@@ -12,7 +12,6 @@ class Product {
   }
 
   static addProduct = async (marketplace, storefrontId, name, price, quantity) => {
-    console.log(price)
     const results = await marketplace.addProduct(storefrontId, name, price, quantity)
     const newProduct = Product.getProductFromTransaction(results, Event.ProductAdded)
     return newProduct

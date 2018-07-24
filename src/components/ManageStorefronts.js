@@ -55,6 +55,7 @@ class ManageStorefronts extends Component {
 
         <AddStorefront marketplace={this.state.marketplace} handleUpdate={this.handleUpdate}/>
         <StorefrontTableWithdraw marketplace={this.state.marketplace} storefronts={this.state.storefronts} user={this.state.currentUser} />
+        <h6>* All withdrawals will incur a transaction fee</h6>
       </div>
     )
   }
