@@ -1,13 +1,14 @@
 pragma solidity ^0.4.24;
 
 import "zeppelin/contracts/ownership/Ownable.sol";
+import "zeppelin/contracts/lifecycle/Pausable.sol";
 
 
 /**
  * @title Marketplace
  * @dev Marketplace dapp with single owner
  */
-contract Marketplace is Ownable {
+contract Marketplace is Ownable, Pausable {
     
     struct StoreOwner {
         address owner;
@@ -116,6 +117,7 @@ contract Marketplace is Ownable {
     */   
     function addStoreOwner(address _storeOwner) 
         public 
+        whenNotPaused
         onlyOwner 
         uniqueStoreOwner(_storeOwner) 
         returns (uint) 
@@ -144,7 +146,11 @@ contract Marketplace is Ownable {
     * @dev Add a storefront
     * @param _name Name of the storefront
     */
-    function addStorefront(string _name) public returns (uint) {
+    function addStorefront(string _name) 
+        public 
+        whenNotPaused
+        returns (uint) 
+    {
         require(isStoreOwnerList[msg.sender]);
         
         uint storefrontIndex = storefronts.length;
@@ -179,6 +185,7 @@ contract Marketplace is Ownable {
     function withdrawFromStorefront(uint _storefrontId) 
         public 
         payable 
+        whenNotPaused
         isStoreOwnerOfStorefront(msg.sender, _storefrontId)
         returns (uint)
     {
@@ -205,6 +212,7 @@ contract Marketplace is Ownable {
     function withdrawFromAllStorefronts() 
         public 
         payable 
+        whenNotPaused
         returns (uint)
     {
         StoreOwner memory storeOwner = storeOwners[storeOwnerToIndex[msg.sender]];
@@ -243,6 +251,7 @@ contract Marketplace is Ownable {
     */
     function addProduct(uint _storefrontId, string _name, uint _price, uint _quantity) 
         public 
+        whenNotPaused
         isStoreOwnerOfStorefront(msg.sender, _storefrontId) 
         returns (uint) 
     {
@@ -284,6 +293,7 @@ contract Marketplace is Ownable {
     function updateProduct(uint _index, string _name, uint _price, uint _quantity) 
         public 
         payable 
+        whenNotPaused
         isStoreOwnerOfStorefront(msg.sender, products[_index].storefrontId)
         validProductId(_index)
         returns (uint) 
@@ -305,6 +315,7 @@ contract Marketplace is Ownable {
     function removeProduct(uint _index) 
         public 
         payable 
+        whenNotPaused
         isStoreOwnerOfStorefront(msg.sender, products[_index].storefrontId)
         validProductId(_index) 
         returns (uint) 
@@ -325,6 +336,7 @@ contract Marketplace is Ownable {
     function purchaseProduct(uint _index, uint _quantity) 
         public 
         payable 
+        whenNotPaused
         validProductId(_index) 
         returns (uint) 
     {
