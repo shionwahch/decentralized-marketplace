@@ -1,5 +1,5 @@
 {
-  "name": "react-box",
+  "name": "decentralized-marketplace",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
@@ -53,7 +53,6 @@
     "bootstrap": "^4.1.2",
     "dotenv": "^2.0.0",
     "jquery": "^3.3.1",
-    "openzeppelin-solidity": "1.10.0",
     "popper.js": "^1.14.3",
     "prop-types": "^15.6.2",
     "react": "^15.4.2",

@@ -15,13 +15,23 @@ Ganache-CLI (`yarn global add ganache-cli`)
 ```
 ganache-cli
 ```
+Ganache default port number is `8545`
+
+### Configure the Application
+Check on the file `truffle.js`. Make sure that the port number matches the one that Ganache uses. 
 
 ### Start the Application
 ```
 yarn install
+truffle install
 truffle compile
 truffle migrate
 yarn start
 ```
 
 Visit http://localhost:3000.
+
+
+## Notes
+
+Packages in EthPM are outdated. Zeppelin is added to this codebase via EthPM due to specific business requirements, one is advised to add this dependency module through Yarn instead.
