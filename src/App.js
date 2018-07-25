@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import contract from 'truffle-contract'
 import MarketplaceContract from '../build/contracts/Marketplace.json'
 import getWeb3 from './utils/getWeb3'
@@ -11,6 +11,7 @@ import ManageStorefronts from './components/ManageStorefronts'
 import ManageProducts from './components/ManageProducts'
 import Storefronts from './components/Storefronts'
 import Products from './components/Products'
+import { isAdmin, isStoreOwner } from './constants/role'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -58,9 +59,9 @@ class App extends Component {
         <main className="container">
           <div className="pure-g">
             <Route path="/" exact render={() => <Home user={this.state.currentUser}/>} />
-            <Route path="/manage/store-owners" render={() => <ManageStoreOwners />} />
-            <Route path="/manage/storefronts" exact render={() => <ManageStorefronts user={this.state.currentUser}/>} />
-            <Route path="/manage/storefronts/:id(\d+)" render={() => <ManageProducts />} />
+            <Route path="/manage/store-owners" render={() => isAdmin(this.state.currentUser.role) ? <ManageStoreOwners /> : <Redirect to="/" />} />
+            <Route path="/manage/storefronts" exact render={() => isStoreOwner(this.state.currentUser.role) ? <ManageStorefronts user={this.state.currentUser}/> : <Redirect to="/" />} />
+            <Route path="/manage/storefronts/:id(\d+)" render={() => isStoreOwner(this.state.currentUser.role) ? <ManageProducts /> : <Redirect to="/" />} />
             <Route path="/browse/storefronts" exact render={() => <Storefronts />} />
             <Route path="/browse/storefronts/:id(\d+)" render={() => <Products />} />
             <Route path="/profile" render={() => <div className="pure-u-1-1"><h1>My Profile</h1></div>} />
