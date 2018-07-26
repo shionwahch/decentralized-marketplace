@@ -1,4 +1,3 @@
-// import { assertRevert } from '../helpers/assertRevert'
 const { assertRevert } = require('../helpers/assertRevert');
 const Marketplace = artifacts.require('../../contracts/Marketplace.sol')
 
@@ -10,8 +9,9 @@ contract('Marketplace', (accounts) => {
   const storeOwner2 = accounts[2]
   const shopper1 = accounts[3]
   const shopper2 = accounts[4]
+  const randomAccount = accounts[5]
 
-  before(async () => {
+  beforeEach(async () => {
     marketplace = await Marketplace.new({from: owner})
     await marketplace.addStoreOwner(storeOwner1, { from: owner })
     await marketplace.addStoreOwner(storeOwner2, { from: owner })
@@ -61,14 +61,50 @@ contract('Marketplace', (accounts) => {
     })
 
     describe('addStoreOwner', () => {
+      it('should add a store owner.', async () => {
+        await  marketplace.addStoreOwner(randomAccount, { from: owner })
+        const storeOwnerCount = await marketplace.storeOwnerCount.call()
+        const storeOwner = await marketplace.getStoreOwner.call(storeOwnerCount - 1)
+        const storeOwnerAddress = storeOwner[0]
+        assert.equal(storeOwnerAddress, randomAccount, `The store owner should be ${randomAccount}`);
+        assert.equal(storeOwnerCount.toNumber(), 3, `The store owner count should be 3`);
+      });
+
       it('should not allow adding of same store owner.', async () => {
         const addStoreOwnerCall = marketplace.addStoreOwner(storeOwner1, { from: owner })
         await assertRevert(addStoreOwnerCall)
+
+        const storeOwnerCount = await marketplace.storeOwnerCount.call()
+        assert.equal(storeOwnerCount.toNumber(), 2, `The store owner count should be 2`);
+      });
+
+      it('should not allow adding of null address as store owner.', async () => {
+        const nullAddress = '0x0000000000000000000000000000000000000000'
+        const addStoreOwnerCall = marketplace.addStoreOwner(nullAddress, { from: owner })
+        await assertRevert(addStoreOwnerCall)
+
+        const storeOwnerCount = await marketplace.storeOwnerCount.call()
+        assert.equal(storeOwnerCount.toNumber(), 2, `The store owner count should be 2`);
       });
       
       it('should return error adding store owner with non-admin account.', async () => {
         const addStoreOwnerCall = marketplace.addStoreOwner(shopper1, {from: shopper2})
         await assertRevert(addStoreOwnerCall);
+
+        const storeOwnerCount = await marketplace.storeOwnerCount.call()
+        assert.equal(storeOwnerCount.toNumber(), 2, `The store owner count should be 2`);
+      });
+    })
+
+    describe('isStoreOwner', () => {
+      it('should return true when passed an account who is a Store Owner.', async () => {
+        const isStoreOwner = await  marketplace.isStoreOwner(storeOwner1)
+        assert.equal(isStoreOwner, true, `Should return true`);
+      });
+
+      it('should return false when passed an account who is not a Store Owner.', async () => {
+        const isStoreOwner = await  marketplace.isStoreOwner(shopper1)
+        assert.equal(isStoreOwner, false, `Should return false`);
       });
     })
   });
