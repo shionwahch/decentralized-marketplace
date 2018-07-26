@@ -1,4 +1,5 @@
 const { assertRevert } = require('../helpers/assertRevert')
+const { ethGetBalance, ethGetBlock, ethGetTransaction } = require('../helpers/web3')
 const Marketplace = artifacts.require('../../contracts/Marketplace.sol')
 
 contract('Marketplace', (accounts) => {
@@ -12,8 +13,8 @@ contract('Marketplace', (accounts) => {
   const randomAccount = accounts[5]
   const storefront1 = 'Storefront 1'
   const storefront2 = 'Storefront 2'
-  const product1 = { name: 'Product 1', price: 1, quantity: 100 }
-  const product2 = { name: 'Product 2', price: 1.3, quantity: 100 }
+  const product1 = { name: 'Product 1', price: 10000000000000000, quantity: 100 } // 0.01 ETH
+  const product2 = { name: 'Product 2', price: 13000000000000000, quantity: 100 } // 0.013 ETH
 
   beforeEach(async () => {
     marketplace = await Marketplace.new({from: owner})
@@ -165,7 +166,20 @@ contract('Marketplace', (accounts) => {
       })
     })
 
-    describe('withdrawFromStorefront', () => {
+    describe('withdraw', () => {
+
+      beforeEach(async () => {
+        await marketplace.purchaseProduct(1, 10, { from: shopper1, value: product1.price * 10 })
+        await marketplace.purchaseProduct(2, 3, { from: shopper1, value: product2.price * 3 })
+      })
+
+      it('withdrawFromStorefront', async () => {
+        await marketplace.withdrawFromStorefront(0, { from: storeOwner1 })
+        // const balance = await ethGetBalance(storeOwner1)
+        // const block = await ethGetBlock('latest')
+        // const trx = await ethGetTransaction('0x42b32e07b72257b0e0980e4a46c7f50e8b29ed3fb5ba0308bb75ad6e07fa03c4')
+      })
+
     })
   })
 })

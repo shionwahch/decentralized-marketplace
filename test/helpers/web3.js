@@ -6,4 +6,5 @@ module.exports = {
   ethGetBalance: ethAsync.getBalance,
   ethSendTransaction: ethAsync.sendTransaction,
   ethGetBlock: ethAsync.getBlock,
+  ethGetTransaction: ethAsync.getTransaction,
 };
