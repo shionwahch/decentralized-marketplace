@@ -11,19 +11,19 @@ contract('Marketplace', (accounts) => {
   const shopper1 = accounts[3]
   const shopper2 = accounts[4]
   const randomAccount = accounts[5]
-  const storefront1 = 'Storefront 1'
-  const storefront2 = 'Storefront 2'
-  const product1 = { name: 'Product 1', price: 10000000000000000, quantity: 100 } // 0.01 ETH
-  const product2 = { name: 'Product 2', price: 13000000000000000, quantity: 100 } // 0.013 ETH
+  const storefront1 = { id: 1, name: 'Storefront 1' }
+  const storefront2 = { id: 2, name: 'Storefront 2' }
+  const product1 = { id: 1, name: 'Product 1', price: 10000000000000000, quantity: 100 } // 0.01 ETH
+  const product2 = { id: 2, name: 'Product 2', price: 13000000000000000, quantity: 100 } // 0.013 ETH
 
   beforeEach(async () => {
     marketplace = await Marketplace.new({from: owner})
     await marketplace.addStoreOwner(storeOwner1, { from: owner })
     await marketplace.addStoreOwner(storeOwner2, { from: owner })
-    await marketplace.addStorefront(storefront1, { from: storeOwner1 })
-    await marketplace.addStorefront(storefront2, { from: storeOwner1 })
-    await marketplace.addProduct(0, product1.name, product1.price, product1.quantity, { from: storeOwner1 })
-    await marketplace.addProduct(0, product2.name, product2.price, product2.quantity, { from: storeOwner1 })
+    await marketplace.addStorefront(storefront1.name, { from: storeOwner1 })
+    await marketplace.addStorefront(storefront2.name, { from: storeOwner1 })
+    await marketplace.addProduct(1, product1.name, product1.price, product1.quantity, { from: storeOwner1 })
+    await marketplace.addProduct(1, product2.name, product2.price, product2.quantity, { from: storeOwner1 })
   })
 
   describe('Admin', () => {
@@ -42,8 +42,8 @@ contract('Marketplace', (accounts) => {
     })
     
     describe('getStoreOwner', () => {
-      it('should return storeOwner1 when querying with index 0.', async () => {
-        const storeOwner = await marketplace.getStoreOwner.call(0)
+      it('should return storeOwner1 when querying with index 1.', async () => {
+        const storeOwner = await marketplace.getStoreOwner.call(1)
         const storeOwnerAddress = storeOwner[0]
         assert.equal(storeOwnerAddress, storeOwner1, `The store owner should be ${storeOwner1}`)
       })
@@ -71,7 +71,7 @@ contract('Marketplace', (accounts) => {
       it('should add a store owner.', async () => {
         await  marketplace.addStoreOwner(randomAccount, { from: owner })
         const storeOwnerCount = await marketplace.storeOwnerCount.call()
-        const storeOwner = await marketplace.getStoreOwner.call(storeOwnerCount - 1)
+        const storeOwner = await marketplace.getStoreOwner.call(storeOwnerCount)
         const storeOwnerAddress = storeOwner[0]
         assert.equal(storeOwnerAddress, randomAccount, `The store owner should be ${randomAccount}`)
         assert.equal(storeOwnerCount.toNumber(), 3, `The store owner count should be 3`)
@@ -117,10 +117,10 @@ contract('Marketplace', (accounts) => {
 
     describe('storefronts', () => {
       it('should return [0, 1] (index of storefronts).', async () => {
-        const storeOwner = await marketplace.getStoreOwner.call(0)
+        const storeOwner = await marketplace.getStoreOwner.call(1)
         const storefronts = storeOwner[1].map(s => s.toNumber())
-        assert.equal(storefronts[0], 0, `The storefront index should be 0`)
-        assert.equal(storefronts[1], 1, `The storefront index should be 1`)
+        assert.equal(storefronts[0], 1, `The storefront index should be 1`)
+        assert.equal(storefronts[1], 2, `The storefront index should be 2`)
       })
     })
   })
@@ -128,17 +128,17 @@ contract('Marketplace', (accounts) => {
   describe('Storefront', () => {
     describe('getStorefront', () => {
       it('should return Store 1 details.', async () => {
-        const storefrontResults = await marketplace.getStorefront.call(0)
+        const storefrontResults = await marketplace.getStorefront.call(1)
         const id = storefrontResults[0]
         const name = storefrontResults[1]
         const products = storefrontResults[2].map(s => s.toNumber())
-        const wallet = storefrontResults[3]
+        const wallet = storefrontResults[3].toNumber()
         const storeOwnerId = storefrontResults[4]
-        assert.equal(id, 0, `The storefront id should be 0`)
-        assert.equal(name, storefront1, `The storefront name should be ${storefront1}`)
+        assert.equal(id, 1, `The storefront id should be 1`)
+        assert.equal(name, storefront1.name, `The storefront name should be ${storefront1.name}`)
         assert.deepEqual(products, [1, 2], `The product id should be [1, 2]`)
-        assert.equal(wallet.toNumber(), 0, `The storefront wallet should be 0`)
-        assert.equal(storeOwnerId, 0, `The store owner id should be 0`)
+        assert.equal(wallet, 0, `The storefront wallet should be 0`)
+        assert.equal(storeOwnerId, 1, `The store owner id should be 1`)
       })
     })
 
@@ -147,15 +147,15 @@ contract('Marketplace', (accounts) => {
         const newStorefront = 'New Storefront'
         await marketplace.addStorefront(newStorefront, { from: storeOwner1 })
         
-        const storefrontResults = await marketplace.getStorefront.call(2)
+        const storefrontResults = await marketplace.getStorefront.call(3)
         const id = storefrontResults[0]
         const name = storefrontResults[1]
         assert.equal(name, newStorefront, `The storefront name should be ${newStorefront}`)
 
         const storeOwner = await marketplace.getStoreOwnerByAddress.call(storeOwner1)
         const storefronts = storeOwner[1].map(s => s.toNumber())
-        assert.equal(storefronts[0], 0, `The storefront index should be 0`)
-        assert.equal(storefronts[1], 1, `The storefront index should be 1`)
+        assert.equal(storefronts[0], 1, `The storefront index should be 1`)
+        assert.equal(storefronts[1], 2, `The storefront index should be 2`)
         assert.equal(storefronts[2], id, `The storefront index should be ${id}`)
       })
 
@@ -168,18 +168,18 @@ contract('Marketplace', (accounts) => {
 
     describe('withdrawFromStorefront', () => {
 
-      const product3 = { name: 'Product 3', price: 20000000000000000, quantity: 100 } // 0.02 ETH
+      const product3 = { id: 3, name: 'Product 3', price: 20000000000000000, quantity: 100 } // 0.02 ETH
 
       beforeEach(async () => {
-        await marketplace.addProduct(1, product3.name, product3.price, product3.quantity, { from: storeOwner1 })
-        await marketplace.purchaseProduct(1, 10, { from: shopper1, value: product1.price * 10 })
-        await marketplace.purchaseProduct(2, 3, { from: shopper1, value: product2.price * 3 })
-        await marketplace.purchaseProduct(3, 10, { from: shopper1, value: product3.price * 10 })
+        await marketplace.addProduct(2, product3.name, product3.price, product3.quantity, { from: storeOwner1 })
+        await marketplace.purchaseProduct(product1.id, 10, { from: shopper1, value: product1.price * 10 })
+        await marketplace.purchaseProduct(product2.id, 3, { from: shopper1, value: product2.price * 3 })
+        await marketplace.purchaseProduct(product3.id, 10, { from: shopper1, value: product3.price * 10 })
       })
 
       it('should withdraw from single storefront', async () => {
         const balanceBefore = (await ethGetBalance(storeOwner1)).toNumber()
-        const transactionReceipt = await marketplace.withdrawFromStorefront(0, { from: storeOwner1 })
+        const transactionReceipt = await marketplace.withdrawFromStorefront(1, { from: storeOwner1 })
 
         const gasUsed = transactionReceipt.receipt.gasUsed
         const transactionHash = transactionReceipt.receipt.transactionHash
@@ -217,8 +217,8 @@ contract('Marketplace', (accounts) => {
       })
 
       it('should not withdraw from all storefronts when not triggered by a StoreOwner', async () => {
-        // const withdrawFromAllStorefrontsCall = await marketplace.withdrawFromAllStorefronts({ from: shopper1 })
-        // await assertRevert(withdrawFromAllStorefrontsCall)
+        const withdrawFromAllStorefrontsCall = marketplace.withdrawFromAllStorefronts({ from: shopper1 })
+        await assertRevert(withdrawFromAllStorefrontsCall)
       })
 
     })

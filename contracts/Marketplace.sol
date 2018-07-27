@@ -75,11 +75,38 @@ contract Marketplace is Ownable, Pausable {
     }
 
     /**
+    * @dev Check if a storeOwner id is valid
+    * @param _storeOwnerId Index of the storeOwner
+    */
+    modifier validStoreOwnerId(uint _storeOwnerId) {
+        require(_storeOwnerId > 0 && _storeOwnerId <= storeOwners.length);
+        _;
+    }
+
+    /**
+    * @dev Check if a storefront id is valid
+    * @param _storefrontId Index of the storefront
+    */
+    modifier validStorefrontId(uint _storefrontId) {
+        require(_storefrontId > 0 && _storefrontId <= storefronts.length);
+        _;
+    }
+
+    /**
     * @dev Check if a product id is valid
     * @param _productId Index of the product
     */
     modifier validProductId(uint _productId) {
-        require(_productId > 0);
+        require(_productId > 0 && _productId <= products.length);
+        _;
+    }
+
+    /**
+    * @dev Check if an address is valid
+    * @param _address Address
+    */
+    modifier validAddress(address _address) {
+        require(_address != address(0)); 
         _;
     }
 
@@ -87,7 +114,11 @@ contract Marketplace is Ownable, Pausable {
     * @dev Create invalid objects at index zero
     */
     constructor() public {
+        StoreOwner memory storeOwner;
+        Storefront memory storefront;
         Product memory product;
+        storeOwners.push(storeOwner);
+        storefronts.push(storefront);
         products.push(product);
     }
     
@@ -95,8 +126,13 @@ contract Marketplace is Ownable, Pausable {
     * @dev Retrieves store owner
     * @param _index Index of the store owner
     */
-    function getStoreOwner(uint _index) public view returns (address, uint[]) {
-        require(_index >= 0 && _index < storeOwnerCount);
+    function getStoreOwner(uint _index) 
+        public 
+        view 
+        validStoreOwnerId(_index)
+        returns (address, uint[]) 
+    {
+        require(_index > 0 && _index <= storeOwnerCount);
         return (storeOwners[_index].owner, storeOwners[_index].storefronts);
     }
     
@@ -104,9 +140,12 @@ contract Marketplace is Ownable, Pausable {
     * @dev Retrieves store owner
     * @param _storeOwner Address of the store owner
     */
-    function getStoreOwnerByAddress(address _storeOwner) public view returns (address, uint[]) {
-        require(_storeOwner != address(0));
-
+    function getStoreOwnerByAddress(address _storeOwner) 
+        public 
+        view 
+        validAddress(_storeOwner)
+        returns (address, uint[]) 
+    {
         uint storeOwnerIndex = storeOwnerToIndex[_storeOwner];
         return getStoreOwner(storeOwnerIndex);
     }
@@ -117,28 +156,32 @@ contract Marketplace is Ownable, Pausable {
     */   
     function addStoreOwner(address _storeOwner) 
         public 
-        whenNotPaused
         onlyOwner 
+        validAddress(_storeOwner)
         uniqueStoreOwner(_storeOwner) 
+        whenNotPaused
         returns (uint) 
     {
-        require(_storeOwner != address(0));
-        
         StoreOwner memory storeOwner;
         storeOwner.owner = _storeOwner;
         storeOwners.push(storeOwner);
 
         storeOwnerCount += 1;
-        storeOwnerToIndex[_storeOwner] = storeOwnerCount - 1;
+        storeOwnerToIndex[_storeOwner] = storeOwnerCount;
         isStoreOwnerList[_storeOwner] = true;
-        return storeOwnerCount - 1;
+        return storeOwnerCount;
     }
 
     /**
     * @dev Check if an address is a store owner
     * @param _storeOwner Address of the store owner
     */
-    function isStoreOwner(address _storeOwner) public view returns (bool) {
+    function isStoreOwner(address _storeOwner) 
+        public 
+        view 
+        validAddress(_storeOwner)
+        returns (bool) 
+    {
         return isStoreOwnerList[_storeOwner];
     }
     
@@ -146,7 +189,11 @@ contract Marketplace is Ownable, Pausable {
     * @dev Retrieves storefront
     * @param _index Index of the storefront
     */
-    function getStorefront(uint _index) public view returns (uint, string, uint[], uint, uint) {
+    function getStorefront(uint _index) 
+        public 
+        view 
+        validStorefrontId(_index)
+        returns (uint, string, uint[], uint, uint) {
         return (storefronts[_index].id, storefronts[_index].name, storefronts[_index].products, 
             storefronts[_index].wallet, storefronts[_index].storeOwnerId);
     }
@@ -185,8 +232,9 @@ contract Marketplace is Ownable, Pausable {
     function withdrawFromStorefront(uint _storefrontId) 
         public 
         payable 
-        whenNotPaused
+        validStorefrontId(_storefrontId)
         isStoreOwnerOfStorefront(msg.sender, _storefrontId)
+        whenNotPaused
         returns (uint)
     {
         require(storefronts[_storefrontId].wallet > 0);
@@ -216,6 +264,7 @@ contract Marketplace is Ownable, Pausable {
         returns (uint)
     {
         StoreOwner memory storeOwner = storeOwners[storeOwnerToIndex[msg.sender]];
+        
         require(storeOwner.owner != address(0));
 
         uint totalAmount = 0;
@@ -251,8 +300,9 @@ contract Marketplace is Ownable, Pausable {
     */
     function addProduct(uint _storefrontId, string _name, uint _price, uint _quantity) 
         public 
-        whenNotPaused
+        validStorefrontId(_storefrontId)
         isStoreOwnerOfStorefront(msg.sender, _storefrontId) 
+        whenNotPaused
         returns (uint) 
     {
         require(_price >= 0);
@@ -293,9 +343,9 @@ contract Marketplace is Ownable, Pausable {
     function updateProduct(uint _index, string _name, uint _price, uint _quantity) 
         public 
         payable 
-        whenNotPaused
-        isStoreOwnerOfStorefront(msg.sender, products[_index].storefrontId)
         validProductId(_index)
+        isStoreOwnerOfStorefront(msg.sender, products[_index].storefrontId)
+        whenNotPaused
         returns (uint) 
     {
         Product storage product = products[_index];
@@ -315,9 +365,9 @@ contract Marketplace is Ownable, Pausable {
     function removeProduct(uint _index) 
         public 
         payable 
-        whenNotPaused
-        isStoreOwnerOfStorefront(msg.sender, products[_index].storefrontId)
         validProductId(_index) 
+        isStoreOwnerOfStorefront(msg.sender, products[_index].storefrontId)
+        whenNotPaused
         returns (uint) 
     {
         Product memory product = products[_index];
@@ -336,8 +386,8 @@ contract Marketplace is Ownable, Pausable {
     function purchaseProduct(uint _index, uint _quantity) 
         public 
         payable 
-        whenNotPaused
         validProductId(_index) 
+        whenNotPaused
         returns (uint) 
     {
         require(products[_index].quantity >= _quantity);
