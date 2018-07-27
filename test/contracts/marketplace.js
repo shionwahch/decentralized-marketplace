@@ -166,18 +166,59 @@ contract('Marketplace', (accounts) => {
       })
     })
 
-    describe('withdraw', () => {
+    describe('withdrawFromStorefront', () => {
+
+      const product3 = { name: 'Product 3', price: 20000000000000000, quantity: 100 } // 0.02 ETH
 
       beforeEach(async () => {
+        await marketplace.addProduct(1, product3.name, product3.price, product3.quantity, { from: storeOwner1 })
         await marketplace.purchaseProduct(1, 10, { from: shopper1, value: product1.price * 10 })
         await marketplace.purchaseProduct(2, 3, { from: shopper1, value: product2.price * 3 })
+        await marketplace.purchaseProduct(3, 10, { from: shopper1, value: product3.price * 10 })
       })
 
-      it('withdrawFromStorefront', async () => {
-        await marketplace.withdrawFromStorefront(0, { from: storeOwner1 })
-        // const balance = await ethGetBalance(storeOwner1)
-        // const block = await ethGetBlock('latest')
-        // const trx = await ethGetTransaction('0x42b32e07b72257b0e0980e4a46c7f50e8b29ed3fb5ba0308bb75ad6e07fa03c4')
+      it('should withdraw from single storefront', async () => {
+        const balanceBefore = (await ethGetBalance(storeOwner1)).toNumber()
+        const transactionReceipt = await marketplace.withdrawFromStorefront(0, { from: storeOwner1 })
+
+        const gasUsed = transactionReceipt.receipt.gasUsed
+        const transactionHash = transactionReceipt.receipt.transactionHash
+        const transaction = await ethGetTransaction(transactionHash)
+        const totalGasCost = gasUsed * transaction.gasPrice.toNumber()
+        const totalProductCost = product1.price * 10 + product2.price * 3
+        
+        const balanceAfter = (await ethGetBalance(storeOwner1)).toNumber()
+        const storeOwnerProfit = balanceAfter - balanceBefore
+        const expectedProfit = totalProductCost - totalGasCost
+
+        assert.closeTo(storeOwnerProfit, expectedProfit, 50000, `StoreOwner withdrawal profit should be ${expectedProfit}`)
+      })
+
+      it('should not withdraw from single storefront when not triggered by the StoreOwner of a Storefront', async () => {
+        const withdrawFromStorefrontCall = marketplace.withdrawFromStorefront(0, { from: storeOwner2 })
+        await assertRevert(withdrawFromStorefrontCall)
+      })
+
+      it('should withdraw from all storefronts (2 storefronts)', async () => {
+        const balanceBefore = (await ethGetBalance(storeOwner1)).toNumber()
+        const transactionReceipt = await marketplace.withdrawFromAllStorefronts({ from: storeOwner1 })
+
+        const gasUsed = transactionReceipt.receipt.gasUsed
+        const transactionHash = transactionReceipt.receipt.transactionHash
+        const transaction = await ethGetTransaction(transactionHash)
+        const totalGasCost = gasUsed * transaction.gasPrice.toNumber()
+        const totalProductCost = product1.price * 10 + product2.price * 3 + product3.price * 10
+        
+        const balanceAfter = (await ethGetBalance(storeOwner1)).toNumber()
+        const storeOwnerProfit = balanceAfter - balanceBefore
+        const expectedProfit = totalProductCost - totalGasCost
+
+        assert.closeTo(storeOwnerProfit, expectedProfit, 50000, `StoreOwner withdrawal profit should be ${expectedProfit}`)
+      })
+
+      it('should not withdraw from all storefronts when not triggered by a StoreOwner', async () => {
+        // const withdrawFromAllStorefrontsCall = await marketplace.withdrawFromAllStorefronts({ from: shopper1 })
+        // await assertRevert(withdrawFromAllStorefrontsCall)
       })
 
     })
