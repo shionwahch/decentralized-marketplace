@@ -292,6 +292,20 @@ contract Marketplace is Ownable, Pausable {
     }
 
     /**
+    * @dev Retrieves product
+    * @param _index Index of the product
+    */
+    function getProduct(uint _index) 
+        public 
+        view 
+        validProductId(_index)
+        returns (uint, string, uint, uint) 
+    {
+        Product memory product = products[_index];
+        return (product.id, product.name, product.price, product.quantity);
+    }
+
+    /**
     * @dev Add a product
     * @param _storefrontId The index of the storefront to own the product
     * @param _name Name of the product
@@ -305,8 +319,8 @@ contract Marketplace is Ownable, Pausable {
         whenNotPaused
         returns (uint) 
     {
-        require(_price >= 0);
-        require(_quantity >= 0);
+        require(_price > 0);
+        require(_quantity > 0);
 
         uint productIndex = products.length;
         Product memory product = Product(productIndex, _name, _price * 1 wei, _quantity, _storefrontId);
@@ -317,20 +331,6 @@ contract Marketplace is Ownable, Pausable {
         emit ProductAdded(productIndex, _name, _price, _quantity);
 
         return productIndex;
-    }
-
-    /**
-    * @dev Retrieves product
-    * @param _index Index of the product
-    */
-    function getProduct(uint _index) 
-        public 
-        view 
-        validProductId(_index)
-        returns (uint, string, uint, uint) 
-    {
-        Product memory product = products[_index];
-        return (product.id, product.name, product.price, product.quantity);
     }
 
     /**
