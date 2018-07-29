@@ -11,6 +11,7 @@ import ManageStorefronts from './components/ManageStorefronts'
 import ManageProducts from './components/ManageProducts'
 import Storefronts from './components/Storefronts'
 import Products from './components/Products'
+import Profile from './components/Profile'
 import { isAdmin, isStoreOwner } from './constants/role'
 
 import './css/oswald.css'
@@ -64,7 +65,7 @@ class App extends Component {
             <Route path="/manage/storefronts/:id(\d+)" render={() => isStoreOwner(this.state.currentUser.role) ? <ManageProducts /> : <Redirect to="/" />} />
             <Route path="/browse/storefronts" exact render={() => <Storefronts />} />
             <Route path="/browse/storefronts/:id(\d+)" render={() => <Products />} />
-            <Route path="/profile" render={() => <div className="pure-u-1-1"><h1>My Profile</h1></div>} />
+            <Route path="/profile" render={() => <Profile />} />
           </div>
         </main>
       </div>
