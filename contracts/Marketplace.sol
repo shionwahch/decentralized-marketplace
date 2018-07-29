@@ -2,6 +2,7 @@ pragma solidity ^0.4.24;
 
 import "zeppelin/contracts/ownership/Ownable.sol";
 import "zeppelin/contracts/lifecycle/Pausable.sol";
+import "zeppelin/contracts/math/SafeMath.sol";
 
 
 /**
@@ -166,7 +167,7 @@ contract Marketplace is Ownable, Pausable {
         storeOwner.owner = _storeOwner;
         storeOwners.push(storeOwner);
 
-        storeOwnerCount += 1;
+        storeOwnerCount = SafeMath.add(storeOwnerCount, 1);
         storeOwnerToIndex[_storeOwner] = storeOwnerCount;
         isStoreOwnerList[_storeOwner] = true;
         return storeOwnerCount;
@@ -271,7 +272,7 @@ contract Marketplace is Ownable, Pausable {
         uint[] memory storefrontIds = storeOwner.storefronts;
 
         for (uint i = 0 ; i < storefrontIds.length ; i++) {
-            totalAmount += storefronts[storefrontIds[i]].wallet;
+            totalAmount = SafeMath.add(totalAmount, storefronts[storefrontIds[i]].wallet);
         }
 
         require(totalAmount > 0);
@@ -319,8 +320,7 @@ contract Marketplace is Ownable, Pausable {
         whenNotPaused
         returns (uint) 
     {
-        require(_price > 0);
-        require(_quantity > 0);
+        require(_price > 0 && _quantity > 0);
 
         uint productIndex = products.length;
         Product memory product = Product(productIndex, _name, _price * 1 wei, _quantity, _storefrontId);
@@ -391,10 +391,10 @@ contract Marketplace is Ownable, Pausable {
         returns (uint) 
     {
         require(products[_index].quantity >= _quantity);
-        require(msg.value == products[_index].price * _quantity);
+        require(msg.value == SafeMath.mul(products[_index].price, _quantity));
 
-        products[_index].quantity -= _quantity;
-        storefronts[products[_index].storefrontId].wallet += msg.value;
+        products[_index].quantity = SafeMath.sub(products[_index].quantity, _quantity);
+        storefronts[products[_index].storefrontId].wallet = SafeMath.add(storefronts[products[_index].storefrontId].wallet, msg.value);
 
         emit ProductPurchased(_index, _quantity, msg.value, msg.sender);
 
