@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
-import blockies from '../js/blockies.min'
-import { isAdmin, isStoreOwner, isShopper } from '../constants/role'
+import blockies from '../utils/blockies.min'
 import { getShortAddress } from '../utils/getCurrentUser'
+import { isAdmin, isStoreOwner, isShopper } from '../constants/role'
 
 const NavigationBar = ({ user }) => {
   const icon = blockies.create({
@@ -20,8 +20,10 @@ const NavigationBar = ({ user }) => {
         { isShopper(user.role) ? (<NavLink to="/browse/storefronts" className="pure-menu-item pure-menu-link" activeClassName="pure-menu-link"><li>Browse Storefronts</li></NavLink>) : null }
       </ul>
       <ul className="pure-menu-list navbar-right">
-        <img className="profile-icon" src={icon.toDataURL()}/>
-        <NavLink to="/profile" className="pure-menu-item pure-menu-link" activeClassName="pure-menu-link"><li>{getShortAddress(user.account)} ({user.role})</li></NavLink>
+        <NavLink to="/profile" className="pure-menu-item pure-menu-link" activeClassName="pure-menu-link">
+          <img className="profile-icon" src={icon.toDataURL()}/>
+          Hi, { getShortAddress(user.account) }
+        </NavLink>
       </ul>
     </nav>
   )
