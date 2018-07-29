@@ -1,8 +1,9 @@
 import Web3 from 'web3'
+import { networks } from '../../truffle'
 
 const localProvider = {
-  url: 'http://127.0.0.1',
-  port: 9545
+  url: networks.development.host,
+  port: networks.development.port
 }
 
 const getWeb3 = new Promise((resolve, reject) => {

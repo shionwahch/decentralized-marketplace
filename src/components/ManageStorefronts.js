@@ -36,7 +36,7 @@ class ManageStorefronts extends Component {
     marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
 
     const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
-    const storefronts = await Storefront.listStorefronts(marketplaceInstance, currentUser.account)
+    const storefronts = await Storefront.listStorefrontsByAddress(marketplaceInstance, currentUser.account)
     this.setState({ 
       storefronts: storefronts,
       marketplace: marketplaceInstance,

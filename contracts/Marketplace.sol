@@ -36,6 +36,7 @@ contract Marketplace is Ownable, Pausable {
     Storefront[] private storefronts;
     Product[] private products;
     uint public storeOwnerCount;
+    uint public storefrontCount;
     mapping(address => bool) private isStoreOwnerList;
     mapping(address => uint) private storeOwnerToIndex;
 
@@ -197,6 +198,16 @@ contract Marketplace is Ownable, Pausable {
         returns (uint, string, uint[], uint, uint) {
         return (storefronts[_index].id, storefronts[_index].name, storefronts[_index].products, 
             storefronts[_index].wallet, storefronts[_index].storeOwnerId);
+    }
+
+    /**
+    * @dev Retrieves storefront count (excluding index 0)
+    */
+    function getStorefrontCount()
+        public 
+        view 
+        returns (uint) {
+        return storefronts.length - 1;
     }
 
     /**

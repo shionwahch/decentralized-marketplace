@@ -11,7 +11,16 @@ class Storefront {
     this.storeOwnerId = storeOwnerId
   }
 
-  static listStorefronts = async (marketplace, owner) => {
+  static listStorefronts = async (marketplace) => {
+    const storefrontCount = await marketplace.getStorefrontCount.call()
+    const storefrontList = _.map(_.range(1, Number(storefrontCount) + 1), async index => await marketplace.getStorefront.call(index))
+    const storefronts = _.map(await Promise.all(storefrontList), results => {
+      return new Storefront(results[0].toNumber(), results[1], results[2], results[3].toNumber(), results[4].toNumber())
+    })
+    return storefronts;
+  }
+
+  static listStorefrontsByAddress = async (marketplace, owner) => {
     const storeOwner = await marketplace.getStoreOwnerByAddress(owner)
     const storefrontIds = storeOwner[1];
     const storefrontList = _.map(storefrontIds, async index => await marketplace.getStorefront.call(index))
@@ -29,12 +38,12 @@ class Storefront {
   }
 
   static withdrawFromStorefront = async (marketplace, storefrontId) => {
-    const results = await marketplace.withdrawFromStorefront(storefrontId, { gas: 50000 })
+    const results = await marketplace.withdrawFromStorefront(storefrontId, { gas: 75000 })
     return results
   }
 
   static withdrawFromAllStorefronts = async (marketplace) => {
-    const results = await marketplace.withdrawFromAllStorefronts({ gas: 50000 })
+    const results = await marketplace.withdrawFromAllStorefronts({ gas: 75000 })
     return results
   }
 
