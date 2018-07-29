@@ -36,7 +36,7 @@ contract('Marketplace', (accounts) => {
   describe('Store Owner', () => {
     describe('storeOwnerCount', () => {
       it('should return 2 as the store owner count when added 2 store owners.', async () => {
-        const storeOwnerCount = await marketplace.storeOwnerCount.call()
+        const storeOwnerCount = await marketplace.getStoreOwnerCount.call()
         assert.equal(storeOwnerCount.toNumber(), 2, `The store owner count should be 2`)
       })
     })
@@ -70,7 +70,7 @@ contract('Marketplace', (accounts) => {
     describe('addStoreOwner', () => {
       it('should add a store owner.', async () => {
         await  marketplace.addStoreOwner(randomAccount, { from: owner })
-        const storeOwnerCount = await marketplace.storeOwnerCount.call()
+        const storeOwnerCount = await marketplace.getStoreOwnerCount.call()
         const storeOwner = await marketplace.getStoreOwner.call(storeOwnerCount)
         const storeOwnerAddress = storeOwner[0]
         assert.equal(storeOwnerAddress, randomAccount, `The store owner should be ${randomAccount}`)
@@ -81,7 +81,7 @@ contract('Marketplace', (accounts) => {
         const addStoreOwnerCall = marketplace.addStoreOwner(storeOwner1, { from: owner })
         await assertRevert(addStoreOwnerCall)
 
-        const storeOwnerCount = await marketplace.storeOwnerCount.call()
+        const storeOwnerCount = await marketplace.getStoreOwnerCount.call()
         assert.equal(storeOwnerCount.toNumber(), 2, `The store owner count should be 2`)
       })
 
@@ -90,7 +90,7 @@ contract('Marketplace', (accounts) => {
         const addStoreOwnerCall = marketplace.addStoreOwner(nullAddress, { from: owner })
         await assertRevert(addStoreOwnerCall)
 
-        const storeOwnerCount = await marketplace.storeOwnerCount.call()
+        const storeOwnerCount = await marketplace.getStoreOwnerCount.call()
         assert.equal(storeOwnerCount.toNumber(), 2, `The store owner count should be 2`)
       })
       
@@ -98,7 +98,7 @@ contract('Marketplace', (accounts) => {
         const addStoreOwnerCall = marketplace.addStoreOwner(shopper1, {from: shopper2})
         await assertRevert(addStoreOwnerCall)
 
-        const storeOwnerCount = await marketplace.storeOwnerCount.call()
+        const storeOwnerCount = await marketplace.getStoreOwnerCount.call()
         assert.equal(storeOwnerCount.toNumber(), 2, `The store owner count should be 2`)
       })
     })

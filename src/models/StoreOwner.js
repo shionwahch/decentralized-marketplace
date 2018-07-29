@@ -13,7 +13,7 @@ class StoreOwner {
   }
 
   static listStoreOwners = async (marketplace) => {
-    const storeOwnerCount = await marketplace.storeOwnerCount.call()
+    const storeOwnerCount = await marketplace.getStoreOwnerCount.call()
     const storeOwnerList = _.map(_.range(1, Number(storeOwnerCount) + 1).map(async index => await marketplace.getStoreOwner.call(index)))
     const storeOwners = _.map(await Promise.all(storeOwnerList), results => new StoreOwner(results[0], results[1]))
     return storeOwners

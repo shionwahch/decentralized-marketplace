@@ -35,8 +35,6 @@ contract Marketplace is Ownable, Pausable {
     StoreOwner[] private storeOwners;
     Storefront[] private storefronts;
     Product[] private products;
-    uint public storeOwnerCount;
-    uint public storefrontCount;
     mapping(address => bool) private isStoreOwnerList;
     mapping(address => uint) private storeOwnerToIndex;
 
@@ -134,7 +132,7 @@ contract Marketplace is Ownable, Pausable {
         validStoreOwnerId(_index)
         returns (address, uint[]) 
     {
-        require(_index > 0 && _index <= storeOwnerCount);
+        require(_index > 0 && _index <= storeOwners.length);
         return (storeOwners[_index].owner, storeOwners[_index].storefronts);
     }
     
@@ -153,6 +151,16 @@ contract Marketplace is Ownable, Pausable {
     }
 
     /**
+    * @dev Retrieves storeOwner count (excluding index 0)
+    */
+    function getStoreOwnerCount()
+        public 
+        view 
+        returns (uint) {
+        return storeOwners.length - 1;
+    }
+
+    /**
     * @dev Add a new store owner
     * @param _storeOwner Address of the new store owner
     */   
@@ -168,10 +176,9 @@ contract Marketplace is Ownable, Pausable {
         storeOwner.owner = _storeOwner;
         storeOwners.push(storeOwner);
 
-        storeOwnerCount = SafeMath.add(storeOwnerCount, 1);
-        storeOwnerToIndex[_storeOwner] = storeOwnerCount;
+        storeOwnerToIndex[_storeOwner] = storeOwners.length - 1;
         isStoreOwnerList[_storeOwner] = true;
-        return storeOwnerCount;
+        return storeOwners.length;
     }
 
     /**
