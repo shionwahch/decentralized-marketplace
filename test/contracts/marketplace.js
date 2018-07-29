@@ -228,7 +228,7 @@ contract('Marketplace', (accounts) => {
       it('should return product1 when querying with index 1.', async () => {
         const product = await marketplace.getProduct.call(1)
         const productName = product[1]
-        assert.equal(productName, product1.name, `The product should be ${product1.name}`)
+        assert.equal(productName, product1.name, `The product name should be ${product1.name}`)
       })
 
       it('should return error when retrieving a product with invalid id (or index number).', async () => {
@@ -245,24 +245,35 @@ contract('Marketplace', (accounts) => {
       it('should add a product to storefront.', async () => {
         const newProduct = { name: 'New Product', price: 1, quantity: 1 }
         await marketplace.addProduct(storefront1.id, newProduct.name, newProduct.price, newProduct.quantity, { from: storeOwner1 })
+
+        const addedProduct = await marketplace.getProduct.call(3)
+        const addedProductName = addedProduct[1]
+        assert.equal(addedProductName, newProduct.name, `The product name should be ${product1.name}`)
+
       })
 
-      it('should not add a product to storefront when price 0 or lesser.', async () => {
-        const newProduct1 = { name: 'New Product 1', price: 0, quantity: 1 }
-        // const newProduct2 = { name: 'New Product 2', price: -1, quantity: 1 }
-        const addProductCall1 = marketplace.addProduct(storefront1.id, newProduct1.name, newProduct1.price, newProduct1.quantity, { from: storeOwner1 })
-        // const addProductCall2 = marketplace.addProduct(storefront1.id, newProduct2.name, newProduct2.price, newProduct2.quantity, { from: storeOwner1 })
-        await assertRevert(addProductCall1)
-        // await assertRevert(addProductCall2)
+      it('should not add a product to storefront when price is 0.', async () => {
+        const newProduct = { name: 'New Product', price: 0, quantity: 1 }
+        const addProductCall = marketplace.addProduct(storefront1.id, newProduct.name, newProduct.price, newProduct.quantity, { from: storeOwner1 })
+        await assertRevert(addProductCall)
       })
 
-      it('should not add a product to storefront when quantity 0 or lesser.', async () => {
-        const newProduct1 = { name: 'New Product 1', price: 1, quantity: 0 }
-        // const newProduct2 = { name: 'New Product 2', price: 1, quantity: -1 }
-        const addProductCall1 = marketplace.addProduct(storefront1.id, newProduct1.name, newProduct1.price, newProduct1.quantity, { from: storeOwner1 })
-        // const addProductCall2 = marketplace.addProduct(storefront1.id, newProduct2.name, newProduct2.price, newProduct2.quantity, { from: storeOwner1 })
-        await assertRevert(addProductCall1)
-        // await assertRevert(addProductCall2)
+      it.skip('should not add a product to storefront when price is lesser than 0.', async () => {
+        const newProduct = { name: 'New Product', price: -1, quantity: 1 }
+        const addProductCall = marketplace.addProduct(storefront1.id, newProduct.name, newProduct.price, newProduct.quantity, { from: storeOwner1 })
+        await assertRevert(addProductCall)
+      })
+
+      it('should not add a product to storefront when quantity is 0.', async () => {
+        const newProduct = { name: 'New Product', price: 1, quantity: 0 }
+        const addProductCall = marketplace.addProduct(storefront1.id, newProduct.name, newProduct.price, newProduct.quantity, { from: storeOwner1 })
+        await assertRevert(addProductCall)
+      })
+
+      it.skip('should not add a product to storefront when quantity is lesser than 0.', async () => {
+        const newProduct = { name: 'New Product', price: 1, quantity: -1 }
+        const addProductCall = marketplace.addProduct(storefront1.id, newProduct.name, newProduct.price, newProduct.quantity, { from: storeOwner1 })
+        await assertRevert(addProductCall)
       })
   
       it('should not add a product to storefront when storefrontId is invalid.', async () => {
@@ -284,24 +295,96 @@ contract('Marketplace', (accounts) => {
 
     describe('updateProduct', () => {
       it('should update a product.', async () => {
-        const updatedProduct1 = { id: 1, name: 'Updated Product 1', price: 1, quantity: 1 }
-        await marketplace.updateProduct(updatedProduct1.id, updatedProduct1.name, updatedProduct1.price, updatedProduct1.quantity, { from: storeOwner1 })
+        const updatedProduct = { id: 1, name: 'Updated Product', price: 1, quantity: 1 }
+        await marketplace.updateProduct(updatedProduct.id, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, { from: storeOwner1 })
+
+        const product = await marketplace.getProduct.call(1)
+        const productName = product[1]
+        const productPrice = product[2]
+        const productQuantity = product[3]
+        assert.equal(productName, updatedProduct.name, `The product name should be ${updatedProduct.name}`)
+        assert.equal(productPrice, updatedProduct.price, `The product price should be ${updatedProduct.price}`)
+        assert.equal(productQuantity, updatedProduct.quantity, `The product quantity should be ${updatedProduct.quantity}`)
       })
   
-      it('should not add a product to storefront when storefrontId is invalid.', async () => {
-        const newProduct = { name: 'New Product', price: 1, quantity: 1 }
-        const addProductCall1 = marketplace.addProduct(0, newProduct.name, newProduct.price, newProduct.quantity, { from: storeOwner1 })
-        const addProductCall2 = marketplace.addProduct(-1, newProduct.name, newProduct.price, newProduct.quantity, { from: storeOwner1 })
-        const addProductCall3 = marketplace.addProduct(99, newProduct.name, newProduct.price, newProduct.quantity, { from: storeOwner1 })
-        await assertRevert(addProductCall1)
-        await assertRevert(addProductCall2)
-        await assertRevert(addProductCall3)
+      it('should not update a product of storefront when productId is invalid.', async () => {
+        const updatedProduct = { id: 1, name: 'Updated Product', price: 1, quantity: 1 }
+        const updateProductCall1 = marketplace.updateProduct(0, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, { from: storeOwner1 })
+        const updateProductCall2 = marketplace.updateProduct(-1, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, { from: storeOwner1 })
+        const updateProductCall3 = marketplace.updateProduct(99, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, { from: storeOwner1 })
+        await assertRevert(updateProductCall1)
+        await assertRevert(updateProductCall2)
+        await assertRevert(updateProductCall3)
       })
   
-      it('should not add a product to storefront when sender is not the store owner of the storefront.', async () => {
-        const newProduct = { name: 'New Product', price: 1, quantity: 1 }
-        const addProductCall = marketplace.addProduct(storefront1.id, newProduct.name, newProduct.price, newProduct.quantity, { from: storeOwner2 })
-        await assertRevert(addProductCall)
+      it('should not update a product of storefront when sender is not the store owner of the storefront.', async () => {
+        const updatedProduct = { id: 1, name: 'Updated Product', price: 1, quantity: 1 }
+        const updateProductCall = marketplace.updateProduct(storefront1.id, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, { from: storeOwner2 })
+        await assertRevert(updateProductCall)
+      })
+    })
+
+    describe('removeProduct', () => {
+      it('should remove a product.', async () => {
+        const removedProduct = { id: 1 }
+        await marketplace.removeProduct(removedProduct.id, { from: storeOwner1 })
+
+        const product = await marketplace.getProduct.call(removedProduct.id)
+        const productName = product[1]
+        const productPrice = product[2]
+        const productQuantity = product[3]
+        assert.equal(productName, '', `The product name should be empty`)
+        assert.equal(productPrice, 0, `The product price should be 0`)
+        assert.equal(productQuantity, 0, `The product quantity should be 0`)
+      })
+  
+      it('should not remove a product from storefront when productId is invalid.', async () => {
+        const removeProductCall1 = marketplace.removeProduct(0, { from: storeOwner1 })
+        const removeProductCall2 = marketplace.removeProduct(-1, { from: storeOwner1 })
+        const removeProductCall3 = marketplace.removeProduct(99, { from: storeOwner1 })
+        await assertRevert(removeProductCall1)
+        await assertRevert(removeProductCall2)
+        await assertRevert(removeProductCall3)
+      })
+  
+      it('should not remove a product from storefront when sender is not the store owner of the storefront.', async () => {
+        const removedProduct = { id: 1 }
+        const removeProductCall = marketplace.removeProduct(removedProduct.id, { from: storeOwner2 })
+        await assertRevert(removeProductCall)
+      })
+    })
+
+    describe('purchaseProduct', () => {
+      it('should purchase a product.', async () => {
+        const purchasedProduct = { id: product1.id, quantity: 10 }
+        const quantityBefore = product1.quantity
+        await marketplace.purchaseProduct(purchasedProduct.id, purchasedProduct.quantity, { from: shopper1, value: product1.price * 10  })
+
+        const product = await marketplace.getProduct.call(purchasedProduct.id)
+        const quantityAfter = product[3]
+        assert.equal(quantityAfter, quantityBefore - purchasedProduct.quantity, `The product quantity should be ${quantityBefore - purchasedProduct.quantity}`)
+      })
+  
+      it('should not purchase a product from storefront when productId is invalid.', async () => {
+        const purchasedProduct = { quantity: 10 }
+        const purchaseProductCall1 = marketplace.purchaseProduct(0, purchasedProduct.quantity, { from: shopper1, value: product1.price * 10  })
+        const purchaseProductCall2 = marketplace.purchaseProduct(-1, purchasedProduct.quantity, { from: shopper1, value: product1.price * 10  })
+        const purchaseProductCall3 = marketplace.purchaseProduct(99, purchasedProduct.quantity, { from: shopper1, value: product1.price * 10  })
+        await assertRevert(purchaseProductCall1)
+        await assertRevert(purchaseProductCall2)
+        await assertRevert(purchaseProductCall3)
+      })
+
+      it('should not purchase a product from storefront when purchase quantity exceeds product quantity.', async () => {
+        const purchasedProduct = { id: product1.id, quantity: 999 }
+        const purchaseProductCall = marketplace.purchaseProduct(purchasedProduct.id, purchasedProduct.quantity, { from: shopper1, value: product1.price * 10  })
+        await assertRevert(purchaseProductCall)
+      })
+
+      it('should not purchase a product from storefront when sent value is not the same as the product price.', async () => {
+        const purchasedProduct = { id: product1.id, quantity: 10 }
+        const purchaseProductCall = marketplace.purchaseProduct(purchasedProduct.id, purchasedProduct.quantity, { from: shopper1, value: 99  })
+        await assertRevert(purchaseProductCall)
       })
     })
   })
