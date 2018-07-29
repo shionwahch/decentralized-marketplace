@@ -75,6 +75,12 @@ a:hover {
   margin-right: 10px;
 }
 
+.navbar .profile-icon {
+  height: 30px;
+  vertical-align: middle;
+  border-radius: 50%;
+}
+
 /* Table */
 
 table.store-owner-list {
