@@ -125,9 +125,18 @@ class Profile extends Component {
 
 
 Profile.propTypes = {
-  storeOwners: PropTypes.shape({
-    owner: PropTypes.string,
-    storefronts: PropTypes.arrayOf(PropTypes.number)
+  currentUser: PropTypes.shape({
+    account: PropTypes.string,
+    role: PropTypes.string,
+    balance: PropTypes.number
+  }),
+  transactions: PropTypes.shape({
+    timestamp: PropTypes.string,
+    storefront: PropTypes.string,
+    storefrontId: PropTypes.number,
+    name: PropTypes.string,
+    quantity: PropTypes.number,
+    cost: PropTypes.number,
   })
 }
 
