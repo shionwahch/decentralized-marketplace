@@ -318,10 +318,10 @@ contract Marketplace is Ownable, Pausable {
         public 
         view 
         validProductId(_index)
-        returns (uint, string, uint, uint) 
+        returns (uint, string, uint, uint, uint) 
     {
         Product memory product = products[_index];
-        return (product.id, product.name, product.price, product.quantity);
+        return (product.id, product.name, product.price, product.quantity, product.storefrontId);
     }
 
     /**

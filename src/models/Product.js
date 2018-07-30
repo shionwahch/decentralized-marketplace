@@ -4,11 +4,17 @@ import { weiToEther, etherToWei } from '../utils/web3Utils'
 
 class Product {
   
-  constructor(id, name, price, quantity) {
+  constructor(id, name, price, quantity, storefrontId = 0) {
     this.id = id
     this.name = name
     this.price = price
     this.quantity = quantity
+    this.storefrontId = storefrontId
+  }
+
+  static getById = async (marketplace, productId) => {
+    const results = await marketplace.getProduct.call(productId)
+    return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber(), results[4].toNumber())
   }
 
   static addProduct = async (marketplace, storefrontId, name, price, quantity) => {

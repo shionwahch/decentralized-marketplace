@@ -21,7 +21,7 @@ const NavigationBar = ({ user }) => {
       </ul>
       <ul className="pure-menu-list navbar-right">
         <NavLink to="/profile" className="pure-menu-item pure-menu-link" activeClassName="pure-menu-link">
-          <img className="profile-icon" src={icon.toDataURL()}/>
+          <img className="profile-icon" src={icon.toDataURL()} alt="profile-icon"/>
           Hi, { getShortAddress(user.account) }
         </NavLink>
       </ul>

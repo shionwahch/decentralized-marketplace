@@ -11,6 +11,11 @@ class Storefront {
     this.storeOwnerId = storeOwnerId
   }
 
+  static getById = async (marketplace, storefrontId) => {
+    const results = await marketplace.getStorefront.call(storefrontId)
+    return new Storefront(results[0].toNumber(), results[1], results[2], results[3].toNumber(), results[4].toNumber())
+  }
+
   static listStorefronts = async (marketplace) => {
     const storefrontCount = await marketplace.getStorefrontCount.call()
     const storefrontList = _.map(_.range(1, Number(storefrontCount) + 1), async index => await marketplace.getStorefront.call(index))
