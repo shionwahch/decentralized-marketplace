@@ -12,6 +12,7 @@ import getProductPurchased from '../utils/getProductPurchased'
 import { weiToEther } from '../utils/web3Utils'
 import Product from '../models/Product'
 import Storefront from '../models/Storefront'
+import Role from '../constants/role'
 
 class Profile extends Component {
   constructor(props) {
@@ -43,12 +44,22 @@ class Profile extends Component {
 
     const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
     const balance = await getWeb3Balance(this.state.web3, currentUser.account)
-    const purchaseTransactions = _.filter(await getProductPurchased(marketplaceInstance), event => event.args.purchaser === currentUser.account)
+    let purchaseTransactions = currentUser.role === Role.ADMIN ? [] : await getProductPurchased(marketplaceInstance)
+    
+    if (currentUser.role === Role.SHOPPER) {
+      purchaseTransactions = _.filter(purchaseTransactions, event => event.args.purchaser === currentUser.account)
+    } else if (currentUser.role === Role.STORE_OWNER) {
+      const storefronts = await Storefront.listStorefrontsByAddress(marketplaceInstance, currentUser.account)
+      const productIds = _.map(_.flatten(_.map(storefronts, storefront => storefront.products)), id => id.toNumber())
+      purchaseTransactions = _.filter(purchaseTransactions, event => _.includes(productIds, event.args.id.toNumber()))
+    }
+
     const transactionHistory = _.sortBy(await this.mapPurchaseTransactionToTransactionHistory(marketplaceInstance, purchaseTransactions), [(trx) => -trx.timestamp])
     
     this.setState({ 
       currentUser: {
         account: currentUser.account,
+        role: currentUser.role,
         balance: balance.toNumber()
       },
       transactions: transactionHistory,
@@ -76,7 +87,8 @@ class Profile extends Component {
     return (
       <div className="pure-u-1-1">
         <h1>My Profile <span className="profile-balance">(Balance: {weiToEther(this.state.currentUser.balance)} ETH)</span></h1>
-        Address: {this.state.currentUser.account}
+        Address: {this.state.currentUser.account} <br/>
+        Role: {_.startCase(_.replace(_.lowerCase(this.state.currentUser.role), '_', ' ').toString())}
         <h3>Transaction History</h3>
         <table className="pure-table pure-table-horizontal no-border store-owner-list">
           <thead className="no-background-color">
