@@ -264,6 +264,7 @@ contract Marketplace is Ownable, Pausable {
 
         require(storeOwnerAddress != address(0));
         require(address(this).balance >= amount);
+        require(address(this).balance + amount >= address(this).balance);
 
         storefronts[_storefrontId].wallet = 0;
         storeOwnerAddress.transfer(amount);
@@ -295,6 +296,7 @@ contract Marketplace is Ownable, Pausable {
 
         require(totalAmount > 0);
         require(address(this).balance >= totalAmount);
+        require(address(this).balance + totalAmount >= address(this).balance);
 
         for (uint j = 0 ; j < storefrontIds.length ; j++) {
             storefronts[storefrontIds[j]].wallet = 0;
@@ -410,6 +412,8 @@ contract Marketplace is Ownable, Pausable {
     {
         require(products[_index].quantity >= _quantity);
         require(msg.value == SafeMath.mul(products[_index].price, _quantity));
+        require(address(msg.sender).balance >= msg.value);
+        require(storefronts[products[_index].storefrontId].wallet + msg.value >= storefronts[products[_index].storefrontId].wallet);
 
         products[_index].quantity = SafeMath.sub(products[_index].quantity, _quantity);
         storefronts[products[_index].storefrontId].wallet = SafeMath.add(storefronts[products[_index].storefrontId].wallet, msg.value);
