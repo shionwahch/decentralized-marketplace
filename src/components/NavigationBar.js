@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
-import blockies from '../utils/blockies.min'
+import blockies from 'blockies'
 import { getShortAddress } from '../utils/getCurrentUser'
 import { isAdmin, isStoreOwner, isShopper } from '../constants/role'
 
 const NavigationBar = ({ user }) => {
-  const icon = blockies.create({
+  const icon = blockies({
     seed: user.account,
     bgcolor: '#fff',
   })

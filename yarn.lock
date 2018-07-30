@@ -1231,6 +1231,10 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
+blockies@^0.0.2:
+  version "0.0.2"
+  resolved "http://registry.npm.taobao.org/blockies/download/blockies-0.0.2.tgz#22ad58da4f6b382bc79bf4386c5820c70047e4ed"
+
 bluebird@^3.1.1, bluebird@^3.4.6:
   version "3.5.1"
   resolved "http://registry.npm.taobao.org/bluebird/download/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"

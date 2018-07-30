@@ -50,6 +50,7 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
+    "blockies": "^0.0.2",
     "bootstrap": "^4.1.2",
     "dotenv": "^2.0.0",
     "jquery": "^3.3.1",
