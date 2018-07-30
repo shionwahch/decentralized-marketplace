@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { NavLink } from 'react-router-dom';
 import _ from 'lodash'
 import contract from 'truffle-contract'
 import MarketplaceContract from '../../build/contracts/Marketplace.json'
@@ -13,6 +12,7 @@ import { weiToEther } from '../utils/web3Utils'
 import Product from '../models/Product'
 import Storefront from '../models/Storefront'
 import Role from '../constants/role'
+import TransactionHistoryTable from './TransactionHistoryTable'
 
 class Profile extends Component {
   constructor(props) {
@@ -89,34 +89,9 @@ class Profile extends Component {
         <h1>My Profile <span className="profile-balance">(Balance: {weiToEther(this.state.currentUser.balance)} ETH)</span></h1>
         Address: {this.state.currentUser.account} <br/>
         Role: {_.startCase(_.replace(_.lowerCase(this.state.currentUser.role), '_', ' ').toString())}
+        
         <h3>Transaction History</h3>
-        <table className="pure-table pure-table-horizontal no-border store-owner-list">
-          <thead className="no-background-color">
-              <tr>
-                <th>Time</th>
-                <th>Storefront</th>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Total Cost (ETH)</th>
-              </tr>
-          </thead>
-  
-          <tbody>
-          { 
-            _.map(this.state.transactions, (transaction, index) => {
-              return (
-                <tr key={index}>
-                  <td>{transaction.timestamp}</td>
-                  <td><NavLink to={`browse/storefronts/${transaction.storefrontId}`}>{transaction.storefront}</NavLink></td>
-                  <td>{transaction.name}</td>
-                  <td>{transaction.quantity}</td>
-                  <td>{transaction.cost}</td>
-                </tr>
-              )
-            })
-          }
-          </tbody>
-        </table>
+        <TransactionHistoryTable transactions={this.state.transactions} />
       </div>
     )
   }
