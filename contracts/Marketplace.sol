@@ -2,6 +2,7 @@ pragma solidity ^0.4.24;
 
 import "zeppelin/contracts/ownership/Ownable.sol";
 import "zeppelin/contracts/lifecycle/Pausable.sol";
+import "zeppelin/contracts/lifecycle/Destructible.sol";
 import "zeppelin/contracts/math/SafeMath.sol";
 
 
@@ -9,7 +10,7 @@ import "zeppelin/contracts/math/SafeMath.sol";
  * @title Marketplace
  * @dev Marketplace dapp with single owner
  */
-contract Marketplace is Ownable, Pausable {
+contract Marketplace is Ownable, Pausable, Destructible {
     
     struct StoreOwner {
         address owner;

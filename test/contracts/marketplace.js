@@ -40,6 +40,22 @@ contract('Marketplace', (accounts) => {
     })
   })
 
+  describe('Self-Destruct', () => {
+    it('should allow admin (owner of the contract) to trigger self-destruct.', async () => {
+      const contractBalance = (await ethGetBalance(marketplace.address)).toNumber()
+      const balanceBefore = (await ethGetBalance(owner)).toNumber()
+      await marketplace.destroy({ from: owner })
+      const balanceAfter = (await ethGetBalance(owner)).toNumber()
+      const estimatedGasCost = 1500000000000000
+      assert.closeTo(balanceAfter - balanceBefore, contractBalance, estimatedGasCost, `The contract balance should be around ${contractBalance}`)
+    })
+
+    it('should allow non-admin to send to trigger self-destruct.', async () => {
+      const destroyCall = marketplace.destroy({ from: randomAccount })
+      await assertRevert(destroyCall)
+    })
+  })
+
   describe('Admin', () => {
     it('should return owner as the owner (admin) of the contract.', async () => {
       const contractOwner = await marketplace.owner.call()

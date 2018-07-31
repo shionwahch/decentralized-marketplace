@@ -20,10 +20,6 @@ Payable functions (`withdrawFromStorefront`, `withdrawFromAllStorefronts`, `purc
 
 Payable functions (`withdrawFromStorefront`, `withdrawFromAllStorefronts`, `purchaseProduct`) are implemented separately in favour of pull over push.
 
-## DoS with Block Gas Limit
-
-TODO
-
 ## Forcibly Sending Ether to a Contract
 
-TODO
+Check is added to the fallback function that only allows Admin to send Ethers to the contract's fallback function.
