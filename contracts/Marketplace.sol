@@ -135,7 +135,13 @@ contract Marketplace is Ownable, Pausable {
         require(_index > 0 && _index <= storeOwners.length);
         return (storeOwners[_index].owner, storeOwners[_index].storefronts);
     }
-    
+
+    /**
+    * @dev Fallback function
+    */
+    function() payable {
+        require(msg.sender == address(owner));
+    }    
     /**
     * @dev Retrieves store owner
     * @param _storeOwner Address of the store owner

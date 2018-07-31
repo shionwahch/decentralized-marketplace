@@ -16,13 +16,9 @@ The application has no logic that is dependent of the block timestamp.
 
 Payable functions (`withdrawFromStorefront`, `withdrawFromAllStorefronts`, `purchaseProduct`) have integer overflow checks implemented.
 
-## Underflow in Depth: Storage Manipulation
-
-TODO
-
 ## DoS with (Unexpected) Revert
 
-TODO
+Payable functions (`withdrawFromStorefront`, `withdrawFromAllStorefronts`, `purchaseProduct`) are implemented separately in favour of pull over push.
 
 ## DoS with Block Gas Limit
 

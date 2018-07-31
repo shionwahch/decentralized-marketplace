@@ -26,6 +26,20 @@ contract('Marketplace', (accounts) => {
     await marketplace.addProduct(storefront1.id, product2.name, product2.price, product2.quantity, { from: storeOwner1 })
   })
 
+  describe('Fallback', () => {
+    it('should allow admin (owner of the contract) to send to fallback.', async () => {
+      const balanceBefore = (await ethGetBalance(marketplace.address)).toNumber()
+      await marketplace.sendTransaction({ from: owner, value: 1 })
+      const balanceAfter = (await ethGetBalance(marketplace.address)).toNumber()
+      assert.equal(balanceAfter - balanceBefore, 1, `The contract balance should be 1`)
+    })
+
+    it('should allow non-admin to send to fallback.', async () => {
+      const sendTransactionCall = marketplace.sendTransaction({ from: randomAccount, value: 1 })
+      await assertRevert(sendTransactionCall)
+    })
+  })
+
   describe('Admin', () => {
     it('should return owner as the owner (admin) of the contract.', async () => {
       const contractOwner = await marketplace.owner.call()
