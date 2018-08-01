@@ -4,6 +4,7 @@ import _ from 'lodash'
 import $ from 'jquery'
 import { weiToEther } from '../utils/web3Utils'
 import Storefront from '../models/Storefront'
+import getWeb3ErrorMessage from '../utils/getWeb3ErrorMessage'
 
 class WithdrawWalletAll extends Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class WithdrawWalletAll extends Component {
       await Storefront.withdrawFromAllStorefronts(marketplace)
       this.props.handleWithdrawAll()
     } catch (e) {
-      alert('Error: Only Store Owner is able to withdraw from all their Storefronts')
+      alert(getWeb3ErrorMessage(e))
     }
   }
 

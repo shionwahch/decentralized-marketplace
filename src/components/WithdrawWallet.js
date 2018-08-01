@@ -4,6 +4,7 @@ import $ from 'jquery'
 import { weiToEther } from '../utils/web3Utils'
 import StoreOwner from '../models/StoreOwner'
 import Storefront from '../models/Storefront'
+import getWeb3ErrorMessage from '../utils/getWeb3ErrorMessage'
 
 class WithdrawWallet extends Component {
   constructor(props) {
@@ -39,7 +40,7 @@ class WithdrawWallet extends Component {
       await Storefront.withdrawFromStorefront(this.state.marketplace, this.state.id)
       this.props.handleWithdraw(this.state.id)
     } catch (e) {
-      alert('Error: Only Store Owner is able to withdraw from their Storefront')
+      alert(getWeb3ErrorMessage(e))
     }
   }
 

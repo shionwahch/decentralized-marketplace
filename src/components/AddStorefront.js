@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Storefront from '../models/Storefront'
+import getWeb3ErrorMessage from '../utils/getWeb3ErrorMessage'
 
 class AddStorefront extends Component {
   constructor(props) {
@@ -18,11 +19,17 @@ class AddStorefront extends Component {
   
   handleSubmit = async (event, marketplace) => {
     event.preventDefault();
+
+    if (this.state.name === '') {
+      alert('The storefront must have a name.')
+      return
+    }
+
     try {
       const newStorefront = await Storefront.addStorefront(marketplace, this.state.name)
       this.props.handleUpdate(newStorefront)
     } catch (e) {
-      alert('Error: Only Store Owner is able to add a Storefront')
+      alert(getWeb3ErrorMessage(e))
     }
   }
 

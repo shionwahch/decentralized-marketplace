@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
 import Product from '../models/Product'
+import getWeb3ErrorMessage from '../utils/getWeb3ErrorMessage'
 
 class BuyProduct extends Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class BuyProduct extends Component {
       const purchasedProduct = await Product.purchaseProduct(this.state.marketplace, this.state.id, parseInt(this.state.addedQuantity, 10), this.state.totalCost)
       this.props.handlePurchase(purchasedProduct)
     } catch (e) {
-      alert('Error: Please check if you have enough ETH to purchase the Product')
+      alert(getWeb3ErrorMessage(e))
     }
   }
 

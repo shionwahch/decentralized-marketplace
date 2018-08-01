@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import StoreOwner from '../models/StoreOwner'
+import getWeb3ErrorMessage from '../utils/getWeb3ErrorMessage'
 
 class AddStoreOwner extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ class AddStoreOwner extends Component {
       await StoreOwner.addStoreOwner(marketplace, this.state.address)
       this.props.handleUpdate(new StoreOwner(this.state.address))
     } catch (e) {
-      alert('Error: Duplicated or invalid store owner address')
+      alert(getWeb3ErrorMessage(e))
     }
   }
 

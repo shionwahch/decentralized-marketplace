@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import $ from 'jquery'
 import Product from '../models/Product'
 import { etherToWei } from '../utils/web3Utils'
+import getWeb3ErrorMessage from '../utils/getWeb3ErrorMessage'
 
 class EditProduct extends Component {
   constructor(props) {
@@ -28,11 +29,17 @@ class EditProduct extends Component {
   
   handleUpdate = async (event) => {
     event.preventDefault();
+
+    if (this.state.name === '' || Number(this.state.price) <= 0 || Number(this.state.quantity) <= 0) {
+      alert('The product must have a name. \nPrice and quantity must be greater than 0')
+      return
+    }
+    
     try {
       const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, etherToWei(this.state.price), parseInt(this.state.quantity, 10))
       this.props.handleUpdate(updatedProduct)
     } catch (e) {
-      alert('Error: Only Store Owner is able to edit a Product')
+      alert(getWeb3ErrorMessage(e))
     }
   }
 
@@ -42,7 +49,7 @@ class EditProduct extends Component {
       const removedProduct = await Product.removeProduct(this.state.marketplace, this.state.id)
       this.props.handleDelete(removedProduct)
     } catch (e) {
-      alert('Error: Only Store Owner is able to delete a Product')
+      alert(getWeb3ErrorMessage(e))
     }
   }
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Product from '../models/Product'
 import { etherToWei } from '../utils/web3Utils'
+import getWeb3ErrorMessage from '../utils/getWeb3ErrorMessage'
 
 class AddProduct extends Component {
   constructor(props) {
@@ -24,11 +25,17 @@ class AddProduct extends Component {
   
   handleSubmit = async (event, marketplace) => {
     event.preventDefault();
+    
+    if (this.state.name === '' || Number(this.state.price) <= 0 || Number(this.state.quantity) <= 0) {
+      alert('The product must have a name. \nPrice and quantity must be greater than 0')
+      return
+    }
+
     try {
       const newProduct = await Product.addProduct(marketplace, this.state.storefrontId, this.state.name, etherToWei(this.state.price), parseInt(this.state.quantity, 10))
       this.props.handleAdd(newProduct)
     } catch (e) {
-      alert('Error: Only Store Owner is able to add a Product')
+      alert(getWeb3ErrorMessage(e))
     }
   }
 
