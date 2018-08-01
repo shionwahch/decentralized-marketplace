@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import StoreOwner from '../models/StoreOwner'
 import getWeb3ErrorMessage from '../utils/getWeb3ErrorMessage'
+import getWeb3 from '../utils/getWeb3'
 
 class AddStoreOwner extends Component {
   constructor(props) {
@@ -19,6 +20,12 @@ class AddStoreOwner extends Component {
   
   handleSubmit = async (event, marketplace) => {
     event.preventDefault();
+
+    if (!(await getWeb3).isAddress(this.state.address)) {
+      alert('The store owner address is invalid.')
+      return
+    }
+
     try {
       await StoreOwner.addStoreOwner(marketplace, this.state.address)
       this.props.handleUpdate(new StoreOwner(this.state.address))
