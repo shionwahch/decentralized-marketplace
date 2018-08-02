@@ -125,3 +125,30 @@ form button {
 .withdraw-wallet {
   font-size: 11px;
 }
+
+/* Product Image */
+
+.product-image {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  text-align: center;
+  height: 150px;
+  width: 150px;
+  margin: auto;
+  border: thin;
+  border-style: dashed;
+  border-color: #233e5e;
+  border-radius: 5%;
+}
+
+.product-image img {
+  height: inherit;
+  width: inherit;
+  object-fit: cover;
+  border-radius: 5%;
+}
+
+.product-image div, .product-upload-status {
+  font-size: 0.6em;
+}

@@ -31,6 +31,7 @@ contract Marketplace is Ownable, Pausable, Destructible {
         uint price;
         uint quantity;
         uint storefrontId;
+        string image;
     }
 
     StoreOwner[] private storeOwners;
@@ -327,10 +328,10 @@ contract Marketplace is Ownable, Pausable, Destructible {
         public 
         view 
         validProductId(_index)
-        returns (uint, string, uint, uint, uint) 
+        returns (uint, string, uint, uint, uint, string) 
     {
         Product memory product = products[_index];
-        return (product.id, product.name, product.price, product.quantity, product.storefrontId);
+        return (product.id, product.name, product.price, product.quantity, product.storefrontId, product.image);
     }
 
     /**
@@ -360,7 +361,7 @@ contract Marketplace is Ownable, Pausable, Destructible {
         require(_price > 0 && _quantity > 0);
 
         uint productIndex = products.length;
-        Product memory product = Product(productIndex, _name, _price * 1 wei, _quantity, _storefrontId);
+        Product memory product = Product(productIndex, _name, _price * 1 wei, _quantity, _storefrontId, "");
         products.push(product);
 
         storefronts[_storefrontId].products.push(productIndex);
@@ -377,7 +378,7 @@ contract Marketplace is Ownable, Pausable, Destructible {
     * @param _price Price of the product in ETH
     * @param _quantity Quantity of the product
     */
-    function updateProduct(uint _index, string _name, uint _price, uint _quantity) 
+    function updateProduct(uint _index, string _name, uint _price, uint _quantity, string _image) 
         public 
         payable 
         validProductId(_index)
@@ -389,6 +390,7 @@ contract Marketplace is Ownable, Pausable, Destructible {
         product.name = _name;
         product.price = _price * 1 wei;
         product.quantity = _quantity;
+        product.image = _image;
 
         emit ProductUpdated(_index, _name, _price, _quantity);
 

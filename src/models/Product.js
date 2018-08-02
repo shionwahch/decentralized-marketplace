@@ -4,17 +4,18 @@ import { weiToEther, etherToWei } from '../utils/web3Utils'
 
 class Product {
   
-  constructor(id, name, price, quantity, storefrontId = 0) {
+  constructor(id, name, price, quantity, storefrontId = 0, image = '') {
     this.id = id
     this.name = name
     this.price = price
     this.quantity = quantity
     this.storefrontId = storefrontId
+    this.image = image
   }
 
   static getById = async (marketplace, productId) => {
     const results = await marketplace.getProduct.call(productId)
-    return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber(), results[4].toNumber())
+    return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber(), results[4].toNumber(), results[5])
   }
 
   static addProduct = async (marketplace, storefrontId, name, price, quantity) => {
@@ -37,15 +38,14 @@ class Product {
     const productIds = storefront[2]
     const productList = _.map(productIds, async index => await marketplace.getProduct.call(index))
     const products = _.map(await Promise.all(productList), results => {
-      console.log(results)
-      return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber())
+      return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber(), results[4].toNumber(), results[5])
     })
     const validProducts = _.filter(products, product => product.id !== 0)
     return validProducts;
   }
 
-  static updateProduct = async (marketplace, id, name, price, quantity) => {
-    const results = await marketplace.updateProduct(id, name, price, quantity)
+  static updateProduct = async (marketplace, id, name, price, quantity, image) => {
+    const results = await marketplace.updateProduct(id, name, price, quantity, image)
     const updatedProduct = Product.getProductFromTransaction(results, Event.ProductUpdated)
     return updatedProduct
   }
