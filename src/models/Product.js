@@ -23,11 +23,21 @@ class Product {
     return newProduct
   }
 
-  static listProducts = async (marketplace, storefrontId) => {
+  static listProducts = async (marketplace) => {
+    const productCount = await marketplace.getProductCount.call()
+    const productList = _.map(_.range(1, Number(productCount) + 1), async index => await marketplace.getProduct.call(index))
+    const products = _.map(await Promise.all(productList), results => {
+      return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber())
+    })
+    return products;
+  }
+
+  static listProductsByStorefrontId = async (marketplace, storefrontId) => {
     const storefront = await marketplace.getStorefront(storefrontId)
     const productIds = storefront[2]
     const productList = _.map(productIds, async index => await marketplace.getProduct.call(index))
     const products = _.map(await Promise.all(productList), results => {
+      console.log(results)
       return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber())
     })
     const validProducts = _.filter(products, product => product.id !== 0)

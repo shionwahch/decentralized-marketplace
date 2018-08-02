@@ -334,6 +334,16 @@ contract Marketplace is Ownable, Pausable, Destructible {
     }
 
     /**
+    * @dev Retrieves product count (excluding index 0)
+    */
+    function getProductCount()
+        public 
+        view 
+        returns (uint) {
+        return products.length - 1;
+    }
+
+    /**
     * @dev Add a product
     * @param _storefrontId The index of the storefront to own the product
     * @param _name Name of the product

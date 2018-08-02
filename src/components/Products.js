@@ -38,7 +38,7 @@ class Products extends Component {
     marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
 
     const storefront = await Storefront.getById(marketplaceInstance, this.state.storefrontId)
-    const products = await Product.listProducts(marketplaceInstance, this.state.storefrontId)
+    const products = await Product.listProductsByStorefrontId(marketplaceInstance, this.state.storefrontId)
     this.setState({
       storefront: storefront,
       products: products,

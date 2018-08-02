@@ -254,6 +254,13 @@ contract('Marketplace', (accounts) => {
   })
 
   describe('Product', () => {
+    describe('getProductCount', () => {
+      it('should return 2 as the prodcuct count when added 2 products.', async () => {
+        const productCount = await marketplace.getProductCount.call()
+        assert.equal(productCount.toNumber(), 2, `The product count should be 2`)
+      })
+    })
+
     describe('getProduct', () => {
       it('should return product1 when querying with index 1.', async () => {
         const product = await marketplace.getProduct.call(1)
