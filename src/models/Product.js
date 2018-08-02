@@ -28,7 +28,7 @@ class Product {
     const productCount = await marketplace.getProductCount.call()
     const productList = _.map(_.range(1, Number(productCount) + 1), async index => await marketplace.getProduct.call(index))
     const products = _.map(await Promise.all(productList), results => {
-      return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber())
+      return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber(), results[4].toNumber(), results[5])
     })
     return products;
   }

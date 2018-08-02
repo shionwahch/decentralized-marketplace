@@ -5,9 +5,7 @@ import contract from 'truffle-contract'
 import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
 import Product from '../models/Product'
-import ProductTable from './ProductTable'
-import BuyProduct from './BuyProduct'
-import { getShortAddress } from '../utils/getCurrentUser'
+import ProductCard from './ProductCard'
 
 class Home extends Component {
   constructor(props) {
@@ -48,15 +46,12 @@ class Home extends Component {
   }
 
   render() {
-    console.log(this.state.products)
     return (
       <div className="pure-u-1-1">
         <h1>Welcome, {_.startCase(_.lowerCase(this.state.user.role))}!</h1>
         <p>Ready to shop!</p>
-        
-        <ProductTable products={this.state.products} />
         {
-          _.map(this.state.products, product => <BuyProduct key={"buy-product-"+product.id} marketplace={this.state.marketplace} product={product} handlePurchase={this.handlePurchase} />)
+          _.map(this.state.products, product => <ProductCard key={"product-card-"+product.id} product={product} />)
         }
       </div>
 
