@@ -325,8 +325,8 @@ contract('Marketplace', (accounts) => {
 
     describe('updateProduct', () => {
       it('should update a product.', async () => {
-        const updatedProduct = { id: 1, name: 'Updated Product', price: 1, quantity: 1 }
-        await marketplace.updateProduct(updatedProduct.id, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, { from: storeOwner1 })
+        const updatedProduct = { id: 1, name: 'Updated Product', price: 1, quantity: 1, image: '' }
+        await marketplace.updateProduct(updatedProduct.id, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, updatedProduct.image, { from: storeOwner1 })
 
         const product = await marketplace.getProduct.call(1)
         const productName = product[1]
@@ -338,18 +338,18 @@ contract('Marketplace', (accounts) => {
       })
   
       it('should not update a product of storefront when productId is invalid.', async () => {
-        const updatedProduct = { id: 1, name: 'Updated Product', price: 1, quantity: 1 }
-        const updateProductCall1 = marketplace.updateProduct(0, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, { from: storeOwner1 })
-        const updateProductCall2 = marketplace.updateProduct(-1, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, { from: storeOwner1 })
-        const updateProductCall3 = marketplace.updateProduct(99, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, { from: storeOwner1 })
+        const updatedProduct = { id: 1, name: 'Updated Product', price: 1, quantity: 1, image: '' }
+        const updateProductCall1 = marketplace.updateProduct(0, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, updatedProduct.image, { from: storeOwner1 })
+        const updateProductCall2 = marketplace.updateProduct(-1, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, updatedProduct.image, { from: storeOwner1 })
+        const updateProductCall3 = marketplace.updateProduct(99, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, updatedProduct.image, { from: storeOwner1 })
         await assertRevert(updateProductCall1)
         await assertRevert(updateProductCall2)
         await assertRevert(updateProductCall3)
       })
   
       it('should not update a product of storefront when sender is not the store owner of the storefront.', async () => {
-        const updatedProduct = { id: 1, name: 'Updated Product', price: 1, quantity: 1 }
-        const updateProductCall = marketplace.updateProduct(storefront1.id, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, { from: storeOwner2 })
+        const updatedProduct = { id: 1, name: 'Updated Product', price: 1, quantity: 1, image: '' }
+        const updateProductCall = marketplace.updateProduct(storefront1.id, updatedProduct.name, updatedProduct.price, updatedProduct.quantity, updatedProduct.image, { from: storeOwner2 })
         await assertRevert(updateProductCall)
       })
     })

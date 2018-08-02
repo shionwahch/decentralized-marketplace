@@ -53,6 +53,7 @@
     "blockies": "^0.0.2",
     "bootstrap": "^4.1.2",
     "dotenv": "^2.0.0",
+    "ipfs-api": "^22.2.4",
     "jquery": "^3.3.1",
     "popper.js": "^1.14.3",
     "prop-types": "^15.6.2",

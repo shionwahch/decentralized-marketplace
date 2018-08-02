@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
+import _ from 'lodash'
 import Product from '../models/Product'
 import { etherToWei } from '../utils/web3Utils'
 import getWeb3ErrorMessage from '../utils/getWeb3ErrorMessage'
+import ipfs from '../utils/getIpfs'
 
 class EditProduct extends Component {
   constructor(props) {
@@ -15,16 +17,53 @@ class EditProduct extends Component {
       name: product.name,
       price: product.price,
       quantity: product.quantity,
+      image: product.image,
+      imageIpfsHash: '',
       marketplace: marketplace
     }
 
     this.handleChange = this.handleChange.bind(this)
+    this.handleImageChange = this.handleImageChange.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
   }
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
+  }
+
+  handleImageChange = (event) => {
+    const files = event.target.files
+    if (files && _.head(files)) {
+      this.previewImage(_.head(files))
+      this.uploadImage(_.head(files))
+    }
+  }
+
+  previewImage(imageFile) {
+    this.setState({ image: imageFile })
+    const productKey = `edit-product-${this.state.id}`
+
+    const reader = new FileReader();
+    reader.onload = (e) => $(`#${productKey}-image`).attr('src', e.target.result);
+    reader.readAsDataURL(imageFile);
+  }
+
+  uploadImage(imageFile) {
+    const productKey = `edit-product-${this.state.id}`
+    $(`#${productKey}-save`).addClass('pure-button-disabled')
+    $(`#${productKey}-upload-status`).text('Uploading product image to IPFS... (approx 25s)')
+
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(imageFile)
+    reader.onloadend = async () => {
+      const buffer = await Buffer.from(reader.result);
+      const ipfsHash = await ipfs.addSync(buffer)
+      this.setState({ imageIpfsHash: _.head(ipfsHash).hash })
+
+      $(`#${productKey}-save`).removeClass('pure-button-disabled')
+      $(`#${productKey}-upload-status`).text('Uploading complete')
+    }
   }
   
   handleUpdate = async (event) => {
@@ -34,9 +73,14 @@ class EditProduct extends Component {
       alert('The product must have a name. \nPrice and quantity must be greater than 0')
       return
     }
-    
+
+    if (this.state.image !== '' && this.state.imageIpfsHash === '') {
+      alert(`The product image ${this.state.image.name} is being uploaded to IPFS, please try again`)
+      return
+    }
+
     try {
-      const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, etherToWei(this.state.price), parseInt(this.state.quantity, 10))
+      const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, etherToWei(this.state.price), parseInt(this.state.quantity, 10), this.state.imageIpfsHash)
       this.props.handleUpdate(updatedProduct)
     } catch (e) {
       alert(getWeb3ErrorMessage(e))
@@ -71,6 +115,15 @@ class EditProduct extends Component {
             <div className="modal-body">
               <form className="pure-form pure-form-aligned">
                 <fieldset>
+                  <div className="pure-control-group product-image" onClick={() => $(`#${productKey}-image-input`).click()}>
+                    {
+                      this.state.image !== '' ?
+                        <img name={`${productKey}-image`} id={`${productKey}-image`} role="presentation" src={ipfs.getUrl(this.state.image)} /> :
+                        <div>+ Upload Product Image</div>
+                    }
+                    <input name={`${productKey}-image-input`} id={`${productKey}-image-input`} type="file" className="hidden" onChange={this.handleImageChange}/>
+                  </div>
+
                   <div className="pure-control-group">
                     <label htmlFor="name">Name</label>
                     <input name="name" type="text" placeholder="Name" value={this.state.name} onChange={this.handleChange}/>
@@ -92,7 +145,8 @@ class EditProduct extends Component {
             </div>
 
             <div className="modal-footer">
-              <button type="button" className="pure-button pure-button-primary" data-dismiss="modal" onClick={() => $(`#${productKey}-submit`).click()}>Save</button>
+              <div className="product-upload-status" id={`${productKey}-upload-status`}></div>
+              <button type="button" className="pure-button pure-button-primary" id={`${productKey}-save`} data-dismiss="modal" onClick={() => $(`#${productKey}-submit`).click()}>Save</button>
               <button type="button" className="pure-button pure-button-secondary" data-dismiss="modal" onClick={this.handleDelete}>Delete</button>
               <button type="button" className="pure-button pure-button-secondary" data-dismiss="modal">Close</button>
             </div>
