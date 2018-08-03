@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import Event from '../constants/event'
 import { weiToEther, etherToWei } from '../utils/web3Utils'
+import Storefront from './Storefront'
 
 class Product {
   
@@ -70,6 +71,12 @@ class Product {
   
   static mapEventToProduct = (event) => {
     return new Product(event.id.toNumber(), event.name, weiToEther(event.price.toNumber()), event.quantity.toNumber())
+  }
+
+  static attachStorefront = async (marketplace, product) => {
+    const storefront = await Storefront.getById(marketplace, product.storefrontId)
+    product.storefront = storefront
+    return product
   }
   
 }

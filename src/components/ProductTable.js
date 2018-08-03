@@ -20,7 +20,7 @@ const ProductTable = ({ products }) => {
       { 
         _.map(products, (product, index) => {
           return (
-            <tr key={`product-${product.id}`}>
+            <tr key={`product-${product.id}`} id={`product-${product.id}`}>
               <td>{index + 1}</td>
               <td>{product.name}</td>
               <td>{product.price}</td>

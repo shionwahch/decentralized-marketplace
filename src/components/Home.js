@@ -33,8 +33,9 @@ class Home extends Component {
     marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
 
     const products = await Product.listProducts(marketplaceInstance)
+    const productsWithStorefront = await Promise.all(_.map(products, async product => await Product.attachStorefront(marketplaceInstance, product)))
     this.setState({
-      products: products,
+      products: productsWithStorefront,
       marketplace: marketplaceInstance
     })
   }
@@ -49,7 +50,6 @@ class Home extends Component {
     return (
       <div className="pure-u-1-1">
         <h1>Welcome, {_.startCase(_.lowerCase(this.state.user.role))}!</h1>
-        <p>Ready to shop!</p>
         {
           _.map(this.state.products, product => <ProductCard key={"product-card-"+product.id} product={product} />)
         }
