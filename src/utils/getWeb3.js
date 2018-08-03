@@ -20,7 +20,7 @@ const getWeb3 = new Promise((resolve, reject) => {
       console.log('Injected web3 detected.');
     } else {
       // Fallback to localhost if no web3 injection. 
-      provider = new Web3.providers.HttpProvider(`${localProvider.url}:${localProvider.port}`)
+      provider = new Web3.providers.HttpProvider(`http://${localProvider.url}:${localProvider.port}`)
 
       console.log('No web3 instance injected, using Local web3.');
     }
