@@ -196,23 +196,28 @@ form button {
   padding-top: 10px;
 }
 
-.card-title {
+.card-body .card-title {
   font-weight: normal;
   color: inherit;
 }
 
-.card-title:visited {
+.card-body .card-title:visited {
   color: inherit;
 }
 
-.card-price {
+.card-body .card-price {
   font-weight: bold;
 }
 
-.card-storefront {
+.card-body .card-storefront {
   color: inherit;
 }
 
-.card-storefront:visited {
+.card-body .card-storefront:visited {
   color: inherit;
+}
+
+.card-body .buy {
+  width: 100%;
+  border-radius: 5px;
 }

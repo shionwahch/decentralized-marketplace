@@ -54,7 +54,6 @@ class Home extends Component {
           _.map(this.state.products, product => <ProductCard key={"product-card-"+product.id} product={product} />)
         }
       </div>
-
     )
   }
 }

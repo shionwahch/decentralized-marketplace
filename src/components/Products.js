@@ -66,6 +66,7 @@ class Products extends Component {
         {
           _.map(this.state.products, product => <BuyProduct key={"buy-product-"+product.id} marketplace={this.state.marketplace} product={product} handlePurchase={this.handlePurchase} />)
         }
+        
       </div>
     )
   }
