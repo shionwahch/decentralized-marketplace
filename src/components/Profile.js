@@ -79,6 +79,7 @@ class Profile extends Component {
         name: product.name,
         quantity: transaction.args.quantity.toNumber(),
         cost: weiToEther(transaction.args.cost),
+        image: product.image
       }
     }))
   }

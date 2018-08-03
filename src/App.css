@@ -153,6 +153,13 @@ form button {
   font-size: 0.6em;
 }
 
+.transaction-product-image {
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: 5%;
+}
+
 /* Homepage */
 
 .card {
