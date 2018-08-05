@@ -7,6 +7,7 @@ import getMarketplace from '../utils/getMarketplace'
 import AddProduct from './AddProduct'
 import ProductTableEdit from './ProductTableEdit'
 import Product from '../models/Product'
+import Storefront from '../models/Storefront'
 import EditProduct from './EditProduct'
 
 class ManageProducts extends Component {
@@ -35,8 +36,11 @@ class ManageProducts extends Component {
   async initializeData() {
     const marketplaceInstance = await getMarketplace(this.state.web3)
 
+    const storefront = await Storefront.getById(marketplaceInstance, this.state.storefrontId)
     const products = await Product.listProductsByStorefrontId(marketplaceInstance, this.state.storefrontId)
+    console.log(products)
     this.setState({ 
+      storefront: storefront,
       products: products,
       marketplace: marketplaceInstance
     })
@@ -68,7 +72,7 @@ class ManageProducts extends Component {
   render() {
     return (
       <div className="pure-u-1-1">
-        <h1>Product List</h1>
+        <h1>{this.state.storefront ? `${this.state.storefront.name} Product List` : '\u00A0'}</h1>
   
         <AddProduct marketplace={this.state.marketplace} storefrontId={this.state.storefrontId} handleAdd={this.handleAdd}/>
         <ProductTableEdit products={this.state.products} />

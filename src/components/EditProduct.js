@@ -18,7 +18,6 @@ class EditProduct extends Component {
       price: product.price,
       quantity: product.quantity,
       image: product.image,
-      imageIpfsHash: '',
       marketplace: marketplace
     }
 
@@ -52,14 +51,14 @@ class EditProduct extends Component {
   uploadImage(imageFile) {
     const productKey = `edit-product-${this.state.id}`
     $(`#${productKey}-save`).addClass('pure-button-disabled')
-    $(`#${productKey}-upload-status`).text('Uploading product image to IPFS... (approx 25s)')
+    $(`#${productKey}-upload-status`).text('Uploading product image to IPFS...')
 
     const reader = new FileReader();
     reader.readAsArrayBuffer(imageFile)
     reader.onloadend = async () => {
       const buffer = await Buffer.from(reader.result);
       const ipfsHash = await ipfs.addSync(buffer)
-      this.setState({ imageIpfsHash: _.head(ipfsHash).hash })
+      this.setState({ image: _.head(ipfsHash).hash })
 
       $(`#${productKey}-save`).removeClass('pure-button-disabled')
       $(`#${productKey}-upload-status`).text('Uploading complete')
@@ -74,13 +73,8 @@ class EditProduct extends Component {
       return
     }
 
-    if (this.state.image !== '' && this.state.imageIpfsHash === '') {
-      alert(`The product image ${this.state.image.name} is being uploaded to IPFS, please try again`)
-      return
-    }
-
     try {
-      const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, etherToWei(this.state.price), parseInt(this.state.quantity, 10), this.state.imageIpfsHash)
+      const updatedProduct = await Product.updateProduct(this.state.marketplace, this.state.id, this.state.name, etherToWei(this.state.price), parseInt(this.state.quantity, 10), this.state.image)
       this.props.handleUpdate(updatedProduct)
     } catch (e) {
       alert(getWeb3ErrorMessage(e))
