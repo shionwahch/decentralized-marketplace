@@ -6,8 +6,4 @@ All methods involving alteration of state variables have their relative assertio
 
 ## Circuit Breaker
 
-Curcuit breaker (`Pauseable`) is applied on all payable functions.
-
-## Contract Upgrade
-
-TODO
+Curcuit breaker (`Pausable`) is applied on all payable functions.
