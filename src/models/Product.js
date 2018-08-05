@@ -31,7 +31,8 @@ class Product {
     const products = _.map(await Promise.all(productList), results => {
       return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber(), results[4].toNumber(), results[5])
     })
-    return products;
+    const validProducts = Product.filterValidProducts(products)
+    return validProducts;
   }
 
   static listProductsByStorefrontId = async (marketplace, storefrontId) => {
@@ -41,7 +42,7 @@ class Product {
     const products = _.map(await Promise.all(productList), results => {
       return new Product(results[0].toNumber(), results[1], weiToEther(results[2].toNumber()), results[3].toNumber(), results[4].toNumber(), results[5])
     })
-    const validProducts = _.filter(products, product => product.id !== 0)
+    const validProducts = Product.filterValidProducts(products)
     return validProducts;
   }
 
@@ -71,6 +72,10 @@ class Product {
   
   static mapEventToProduct = (event) => {
     return new Product(event.id.toNumber(), event.name, weiToEther(event.price.toNumber()), event.quantity.toNumber())
+  }
+
+  static filterValidProducts = (products) => {
+    return _.filter(products, product => product.id !== 0)
   }
 
   static attachStorefront = async (marketplace, product) => {

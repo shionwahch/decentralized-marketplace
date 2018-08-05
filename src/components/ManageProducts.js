@@ -38,7 +38,6 @@ class ManageProducts extends Component {
 
     const storefront = await Storefront.getById(marketplaceInstance, this.state.storefrontId)
     const products = await Product.listProductsByStorefrontId(marketplaceInstance, this.state.storefrontId)
-    console.log(products)
     this.setState({ 
       storefront: storefront,
       products: products,
