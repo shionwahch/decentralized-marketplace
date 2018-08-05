@@ -4,6 +4,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
 var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 var url = require('url');
 var paths = require('./paths');
 var getClientEnvironment = require('./env');
@@ -240,17 +241,16 @@ module.exports = {
     // Try to dedupe duplicated modules, if any:
     new webpack.optimize.DedupePlugin(),
     // Minify the code.
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        screw_ie8: true, // React doesn't support IE8
-        warnings: false
-      },
-      mangle: {
-        screw_ie8: true
-      },
-      output: {
-        comments: false,
-        screw_ie8: true
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        ie8: false, // React doesn't support IE8
+        compress: {
+          warnings: false
+        },
+        mangle: {},
+        output: {
+          comments: false,
+        }
       }
     }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
