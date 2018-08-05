@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import contract from 'truffle-contract'
-import MarketplaceContract from '../build/contracts/Marketplace.json'
 import getWeb3 from './utils/getWeb3'
 import getCurrentUser from './utils/getCurrentUser'
+import getMarketplace from './utils/getMarketplace'
 import NavigationBar from './components/NavigationBar'
 import Home from './components/Home'
 import ManageStoreOwners from './components/StoreOwners'
@@ -45,9 +44,7 @@ class App extends Component {
   }
 
   async initializeData() {
-    const marketplace = contract(MarketplaceContract)
-    marketplace.setProvider(this.state.web3.currentProvider)
-    const marketplaceInstance = await marketplace.deployed()
+    const marketplaceInstance = await getMarketplace(this.state.web3)
 
     const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
     this.setState({ currentUser: currentUser })

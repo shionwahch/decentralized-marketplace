@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import contract from 'truffle-contract'
-import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
+import getMarketplace from '../utils/getMarketplace'
 import getCurrentUser from '../utils/getCurrentUser'
 import getWeb3Balance from '../utils/getWeb3Balance'
 import getWeb3Block from '../utils/getWeb3Block'
@@ -37,10 +36,7 @@ class Profile extends Component {
   }
 
   async initializeData() {
-    const marketplace = contract(MarketplaceContract)
-    marketplace.setProvider(this.state.web3.currentProvider)
-    const marketplaceInstance = await marketplace.deployed()
-    marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
+    const marketplaceInstance = await getMarketplace(this.state.web3)
 
     const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
     const balance = await getWeb3Balance(this.state.web3, currentUser.account)

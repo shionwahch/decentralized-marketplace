@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import contract from 'truffle-contract'
-import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
 import getCurrentUser from '../utils/getCurrentUser'
+import getMarketplace from '../utils/getMarketplace'
 import AddStorefront from './AddStorefront'
 import StorefrontTableWithdraw from './StorefrontTableWithdraw'
 import Storefront from '../models/Storefront'
@@ -30,11 +29,8 @@ class ManageStorefronts extends Component {
   }
 
   async initializeData() {
-    const marketplace = contract(MarketplaceContract)
-    marketplace.setProvider(this.state.web3.currentProvider)
-    const marketplaceInstance = await marketplace.deployed()
-    marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
-
+    const marketplaceInstance = await getMarketplace(this.state.web3)
+    
     const currentUser = await getCurrentUser(marketplaceInstance, this.state.web3)
     const storefronts = await Storefront.listStorefrontsByAddress(marketplaceInstance, currentUser.account)
     this.setState({ 

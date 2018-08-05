@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import _ from 'lodash'
-import contract from 'truffle-contract'
-import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
+import getMarketplace from '../utils/getMarketplace'
 import Product from '../models/Product'
 import ProductCard from './ProductCard'
 
@@ -27,10 +26,7 @@ class Home extends Component {
   }
 
   async initializeData() {
-    const marketplace = contract(MarketplaceContract)
-    marketplace.setProvider(this.state.web3.currentProvider)
-    const marketplaceInstance = await marketplace.deployed()
-    marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
+    const marketplaceInstance = await getMarketplace(this.state.web3)
 
     const products = await Product.listProducts(marketplaceInstance)
     const productsWithStorefront = await Promise.all(_.map(products, async product => await Product.attachStorefront(marketplaceInstance, product)))
@@ -49,7 +45,7 @@ class Home extends Component {
   render() {
     return (
       <div className="pure-u-1-1">
-        <h1>Welcome, {_.startCase(_.lowerCase(this.state.user.role))}!</h1>
+        <h1>Welcome{ this.state.user.role ? `, ${_.startCase(_.lowerCase(this.state.user.role))}` : ''}!</h1>
         {
           _.map(this.state.products, product => <ProductCard key={"product-card-"+product.id} product={product} />)
         }

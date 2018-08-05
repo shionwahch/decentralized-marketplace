@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import contract from 'truffle-contract'
-import MarketplaceContract from '../../build/contracts/Marketplace.json'
 import getWeb3 from '../utils/getWeb3'
+import getMarketplace from '../utils/getMarketplace'
 import AddProduct from './AddProduct'
 import ProductTableEdit from './ProductTableEdit'
 import Product from '../models/Product'
@@ -34,10 +33,7 @@ class ManageProducts extends Component {
   }
 
   async initializeData() {
-    const marketplace = contract(MarketplaceContract)
-    marketplace.setProvider(this.state.web3.currentProvider)
-    const marketplaceInstance = await marketplace.deployed()
-    marketplaceInstance.contract._eth.defaultAccount = marketplaceInstance.contract._eth.coinbase
+    const marketplaceInstance = await getMarketplace(this.state.web3)
 
     const products = await Product.listProductsByStorefrontId(marketplaceInstance, this.state.storefrontId)
     this.setState({ 
