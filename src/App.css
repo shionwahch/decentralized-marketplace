@@ -82,6 +82,18 @@ a:hover {
   border-radius: 50%;
 }
 
+/* Footer */
+.footer {
+  color: black;
+  font-weight: lighter;
+  padding: 10px;
+  position: fixed;
+  bottom: 0px;
+  border-top: 1px solid;
+  border-color: rgba(35, 62, 94, .05);
+  background-color: transparent;
+}
+
 /* Profile */
 .profile-balance {
   font-weight: lighter;

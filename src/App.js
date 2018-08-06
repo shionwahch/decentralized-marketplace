@@ -4,6 +4,7 @@ import getWeb3 from './utils/getWeb3'
 import getCurrentUser from './utils/getCurrentUser'
 import getMarketplace from './utils/getMarketplace'
 import NavigationBar from './components/NavigationBar'
+import Footer from './components/Footer'
 import Home from './components/Home'
 import ManageStoreOwners from './components/StoreOwners'
 import ManageStorefronts from './components/ManageStorefronts'
@@ -66,6 +67,8 @@ class App extends Component {
             <Route path="/profile" render={() => <Profile />} />
           </div>
         </main>
+
+        <Footer />
       </div>
     );
   }
