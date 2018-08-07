@@ -5,6 +5,7 @@ import getWeb3 from '../utils/getWeb3'
 import getMarketplace from '../utils/getMarketplace'
 import StoreOwner from '../models/StoreOwner'
 import AddStoreOwner from './AddStoreOwner'
+import { getAddress } from '../constants/blockExplorer'
 
 class ManageStoreOwners extends Component {
   constructor(props) {
@@ -61,7 +62,7 @@ class ManageStoreOwners extends Component {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{storeOwner.owner}</td>
+                  <td><a href={getAddress(storeOwner.owner)} target="_blank">{storeOwner.owner}</a></td>
                 </tr>
               )
             })
