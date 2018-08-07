@@ -13,7 +13,7 @@ const NavigationBar = ({ user }) => {
 
   return (
     <nav className="navbar pure-menu pure-menu-horizontal">
-      <NavLink exact to="/" className="pure-menu-heading pure-menu-link" activeClassName="pure-menu-link">Decentralized Marketplace</NavLink>
+      <NavLink exact to="/" className="pure-menu-heading pure-menu-link" activeClassName="pure-menu-link">Marketplace</NavLink>
       <ul className="pure-menu-list">
         { isAdmin(user.role) ? (<NavLink to="/manage/store-owners" className="pure-menu-item pure-menu-link" activeClassName="pure-menu-link"><li>Manage Store Owners</li></NavLink>) : null }
         { isStoreOwner(user.role) ? (<NavLink to="/manage/storefronts" className="pure-menu-item pure-menu-link" activeClassName="pure-menu-link"><li>Manage Storefronts</li></NavLink>) : null }

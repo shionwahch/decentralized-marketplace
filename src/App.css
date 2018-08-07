@@ -82,6 +82,13 @@ a:hover {
   border-radius: 50%;
 }
 
+.logo {
+  padding-left: 10px;
+  height: 30px;
+  width: 30px;
+  vertical-align: middle;
+}
+
 /* Footer */
 .footer {
   color: black;
