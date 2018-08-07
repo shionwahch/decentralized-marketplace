@@ -12,6 +12,7 @@ import ManageProducts from './components/ManageProducts'
 import Storefronts from './components/Storefronts'
 import Products from './components/Products'
 import Profile from './components/Profile'
+import BecomeStoreOwner from './components/BecomeStoreOwner'
 import { isAdmin, isStoreOwner } from './constants/role'
 
 import './css/oswald.css'
@@ -55,6 +56,7 @@ class App extends Component {
     return (
       <div className="App">
         <NavigationBar user={this.state.currentUser} />
+        <BecomeStoreOwner />
 
         <main className="container">
           <div className="pure-g">

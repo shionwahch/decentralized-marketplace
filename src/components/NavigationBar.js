@@ -18,6 +18,7 @@ const NavigationBar = ({ user }) => {
         { isAdmin(user.role) ? (<NavLink to="/manage/store-owners" className="pure-menu-item pure-menu-link" activeClassName="pure-menu-link"><li>Manage Store Owners</li></NavLink>) : null }
         { isStoreOwner(user.role) ? (<NavLink to="/manage/storefronts" className="pure-menu-item pure-menu-link" activeClassName="pure-menu-link"><li>Manage Storefronts</li></NavLink>) : null }
         { isShopper(user.role) ? (<NavLink to="/browse/storefronts" className="pure-menu-item pure-menu-link" activeClassName="pure-menu-link"><li>Browse Storefronts</li></NavLink>) : null }
+        { isShopper(user.role) ? (<NavLink to="#become-seller" className="pure-menu-item pure-menu-link" activeClassName="pure-menu-link" data-toggle="modal" data-target="#become-store-owner"><li>How to Sell?</li></NavLink>) : null }
       </ul>
       <ul className="pure-menu-list navbar-right">
         <NavLink to="/profile" className="pure-menu-item pure-menu-link" activeClassName="pure-menu-link">
