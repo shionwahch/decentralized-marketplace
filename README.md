@@ -90,7 +90,7 @@ truffle compile
 ```
 
 ### Deploy the Contract
-The application uses [dotenv](https://github.com/motdotla/dotenv) to manage environmental variables. Create a `.env` file with values for the following variables.
+The application uses [dotenv](https://github.com/motdotla/dotenv) to manage environmental variables. Create a `.env` file with values for the following environment variables.
 ```
 REACT_APP_INFURA_API_KEY=
 REACT_APP_WALLET_MNEMONIC=
@@ -99,12 +99,15 @@ Then deploy the contract to the network (`rinkeby`).
 ```
 truffle migrate --network rinkeby
 ```
+Note the deployed address of the contract for usage in the next step
 
 ### Build for Production
-Set the deployed address (from the step before) in the `.env` file.
+
+Set the deployed address (from the previous step) environment variable in the production server.
 ```
 REACT_APP_DEPLOYED_ADDRESS=
 ```
+
 Then build the application with webpack.
 ```
 yarn build
@@ -125,7 +128,7 @@ The User Interface does not refresh automatically when you switch between accoun
 
 ### Slow Network Speed
 
-It takes several seconds to get a response from the network hence the user interface feedback might be slow. Please be patient and wait for the network to response.
+It takes a while to get a response from the network, hence the user interface feedback might be slow. Please be patient and wait for the network to response.
 
 ### EthPM Packages
 Packages in EthPM are outdated. Zeppelin is added to this codebase via EthPM due to specific requirements. It is advised to add this dependency module through Yarn instead.

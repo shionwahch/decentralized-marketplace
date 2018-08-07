@@ -6,4 +6,4 @@ All methods involving alteration of state variables have their relative assertio
 
 ## Circuit Breaker
 
-Curcuit breaker (`Pausable`) is applied on all payable functions.
+Curcuit breaker (`Pausable`) is applied on all payable functions. If a vulnerability is found, all payable functions would be suspended upon triggering by the owner of the contract.
